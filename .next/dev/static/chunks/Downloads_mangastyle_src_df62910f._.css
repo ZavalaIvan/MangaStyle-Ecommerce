@@ -1,0 +1,246 @@
+/* [project]/Downloads/mangastyle/src/app/loader-lab/loader-lab.css [app-client] (css) */
+.loader-lab-page {
+  min-height: 100svh;
+  padding: 9rem 0 4rem;
+}
+
+.loader-lab-header {
+  flex-direction: column;
+  gap: 1.25rem;
+  width: min(900px, 100%);
+  margin-bottom: 3rem;
+  display: flex;
+}
+
+.loader-lab-header p.bodyCopy {
+  max-width: 760px;
+}
+
+.loader-lab-layout {
+  grid-template-columns: 1.35fr .9fr;
+  align-items: start;
+  gap: 2rem;
+  display: grid;
+}
+
+.loader-lab-preview, .loader-lab-controls {
+  border: 1px solid rgba(var(--accent-red-rgb), .14);
+  background: linear-gradient(180deg, rgba(var(--accent-yellow-rgb), .08), transparent 28%), var(--base-100);
+  border-radius: 1.5rem;
+  padding: 1.5rem;
+}
+
+.loader-lab-preview {
+  place-items: center;
+  min-height: 560px;
+  display: grid;
+}
+
+.loader-lab-controls {
+  flex-direction: column;
+  gap: 1.5rem;
+  display: flex;
+}
+
+.loader-lab-control-grid {
+  gap: 1rem;
+  display: grid;
+}
+
+.loader-lab-control {
+  background: rgba(var(--accent-red-rgb), .05);
+  border: 1px solid rgba(var(--accent-red-rgb), .08);
+  border-radius: 1rem;
+  gap: .5rem;
+  padding: 1rem;
+  display: grid;
+}
+
+.loader-lab-control span, .loader-lab-control strong {
+  color: var(--base-700);
+}
+
+.loader-lab-control input {
+  width: 100%;
+  accent-color: var(--accent-red);
+}
+
+.loader-lab-actions {
+  flex-wrap: wrap;
+  gap: .75rem;
+  display: flex;
+}
+
+.loader-lab-notes {
+  border-top: 1px dashed rgba(var(--accent-red-rgb), .24);
+  flex-direction: column;
+  gap: .75rem;
+  padding-top: .5rem;
+  display: flex;
+}
+
+.loader-lab-notes p {
+  color: var(--base-700);
+  text-transform: none;
+  line-height: 1.35;
+}
+
+.loader-lab-notes code {
+  font-family: var(--font-dm-mono), monospace;
+  background: rgba(var(--accent-yellow-rgb), .45);
+  border-radius: .35rem;
+  padding: .15rem .35rem;
+}
+
+@media (max-width: 1000px) {
+  .loader-lab-page {
+    padding-top: 7rem;
+  }
+
+  .loader-lab-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .loader-lab-preview {
+    min-height: 420px;
+  }
+}
+
+/* [project]/Downloads/mangastyle/src/components/Copy/Copy.css [app-client] (css) */
+.line {
+  will-change: transform;
+  position: relative;
+  transform: translateY(100%);
+}
+
+/* [project]/Downloads/mangastyle/src/components/LoaderSpriteLab/LoaderSpriteLab.css [app-client] (css) */
+.loader-sprite-lab {
+  justify-content: center;
+  width: 100%;
+  display: flex;
+}
+
+.loader-sprite-shell {
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  display: flex;
+}
+
+.loader-sprite-track {
+  border: 1px solid rgba(var(--accent-yellow-rgb), .25);
+  background: radial-gradient(circle at top, rgba(var(--accent-yellow-rgb), .18), transparent 42%), linear-gradient(180deg, rgba(var(--accent-red-rgb), .14), #1110 55%), var(--base-700);
+  width: min(100%, 920px);
+  height: 420px;
+  box-shadow: 0 18px 40px #11111147, inset 0 0 0 1px rgba(var(--accent-red-rgb), .18);
+  border-radius: 1.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.loader-sprite-track:before {
+  content: "";
+  background-image: linear-gradient(rgba(var(--accent-yellow-rgb), .06) 1px, transparent 1px), linear-gradient(90deg, rgba(var(--accent-yellow-rgb), .06) 1px, transparent 1px);
+  pointer-events: none;
+  background-size: 24px 24px;
+  position: absolute;
+  inset: 0;
+}
+
+.loader-sprite-motion {
+  z-index: 1;
+  transform: translateX(0) scale(var(--loader-scale));
+  transform-origin: 0 100%;
+  will-change: transform;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
+.loader-sprite-motion.is-playing {
+  animation: loader-sprite-move var(--loader-travel-duration) steps(var(--loader-move-steps), end) infinite alternate;
+}
+
+.loader-sprite-motion.is-paused {
+  animation-play-state: paused;
+}
+
+.loader-sprite-runner {
+  width: var(--loader-visible-frame-width);
+  height: var(--loader-frame-height);
+  background-image: var(--loader-sprite-image);
+  background-repeat: no-repeat;
+  background-position: var(--loader-sprite-start-x) 0;
+  background-size: var(--loader-sheet-width) var(--loader-sheet-height);
+  will-change: background-position;
+  filter: drop-shadow(0 12px 30px #00000059);
+  z-index: 1;
+}
+
+.loader-sprite-runner.is-playing {
+  animation: loader-sprite-steps var(--loader-sprite-duration) steps(var(--loader-step-count), start) infinite;
+}
+
+.loader-sprite-runner.is-paused {
+  animation-play-state: paused;
+}
+
+@keyframes loader-sprite-steps {
+  0% {
+    background-position: var(--loader-sprite-start-x) 0;
+  }
+
+  100% {
+    background-position: var(--loader-sprite-end-x) 0;
+  }
+}
+
+@keyframes loader-sprite-move {
+  0% {
+    transform: translateX(0) scale(var(--loader-scale));
+  }
+
+  100% {
+    transform: translateX(var(--loader-travel-distance)) scale(var(--loader-scale));
+  }
+}
+
+.loader-sprite-meta {
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: .75rem;
+  display: flex;
+}
+
+.loader-sprite-meta p {
+  background: rgba(var(--accent-red-rgb), .12);
+  color: var(--base-700);
+  border: 1px solid rgba(var(--accent-red-rgb), .18);
+  border-radius: 999px;
+  padding: .65rem .85rem;
+}
+
+.loader-sprite-fallback {
+  background: linear-gradient(135deg, rgba(var(--accent-red-rgb), .22), rgba(var(--accent-yellow-rgb), .18));
+  flex-direction: column;
+  justify-content: center;
+  gap: .5rem;
+  width: 100%;
+  height: 100%;
+  padding: 1rem;
+  display: flex;
+}
+
+.loader-sprite-fallback p {
+  color: var(--base-100);
+  text-align: center;
+}
+
+@media (max-width: 1000px) {
+  .loader-sprite-track {
+    height: 320px;
+  }
+}
+
+/*# sourceMappingURL=Downloads_mangastyle_src_df62910f._.css.map*/

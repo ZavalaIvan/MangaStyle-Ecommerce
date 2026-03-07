@@ -1,0 +1,141 @@
+.loader-sprite-lab {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.loader-sprite-shell {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.loader-sprite-track {
+  position: relative;
+  width: min(100%, 920px);
+  height: 420px;
+  overflow: hidden;
+  border-radius: 1.5rem;
+  border: 1px solid rgba(var(--accent-yellow-rgb), 0.25);
+  background:
+    radial-gradient(circle at top, rgba(var(--accent-yellow-rgb), 0.18), transparent 42%),
+    linear-gradient(180deg, rgba(var(--accent-red-rgb), 0.14), rgba(17, 17, 17, 0) 55%),
+    var(--base-700);
+  box-shadow:
+    0 18px 40px rgba(17, 17, 17, 0.28),
+    inset 0 0 0 1px rgba(var(--accent-red-rgb), 0.18);
+}
+
+.loader-sprite-track::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(var(--accent-yellow-rgb), 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(var(--accent-yellow-rgb), 0.06) 1px, transparent 1px);
+  background-size: 24px 24px;
+  pointer-events: none;
+}
+
+.loader-sprite-motion {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  z-index: 1;
+  transform: translateX(0) scale(var(--loader-scale));
+  transform-origin: left bottom;
+  will-change: transform;
+}
+
+.loader-sprite-motion.is-playing {
+  animation: loader-sprite-move var(--loader-travel-duration)
+    steps(var(--loader-move-steps), end) infinite alternate;
+}
+
+.loader-sprite-motion.is-paused {
+  animation-play-state: paused;
+}
+
+.loader-sprite-runner {
+  width: var(--loader-visible-frame-width);
+  height: var(--loader-frame-height);
+  background-image: var(--loader-sprite-image);
+  background-repeat: no-repeat;
+  background-position: var(--loader-sprite-start-x) 0;
+  background-size: var(--loader-sheet-width) var(--loader-sheet-height);
+  will-change: background-position;
+  filter: drop-shadow(0 12px 30px rgba(0, 0, 0, 0.35));
+  z-index: 1;
+}
+
+.loader-sprite-runner.is-playing {
+  animation: loader-sprite-steps var(--loader-sprite-duration)
+    steps(var(--loader-step-count), start) infinite;
+}
+
+.loader-sprite-runner.is-paused {
+  animation-play-state: paused;
+}
+
+@keyframes loader-sprite-steps {
+  0% {
+    background-position: var(--loader-sprite-start-x) 0;
+  }
+
+  100% {
+    background-position: var(--loader-sprite-end-x) 0;
+  }
+}
+
+@keyframes loader-sprite-move {
+  0% {
+    transform: translateX(0) scale(var(--loader-scale));
+  }
+
+  100% {
+    transform: translateX(var(--loader-travel-distance)) scale(var(--loader-scale));
+  }
+}
+
+.loader-sprite-meta {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.loader-sprite-meta p {
+  padding: 0.65rem 0.85rem;
+  border-radius: 999px;
+  background: rgba(var(--accent-red-rgb), 0.12);
+  color: var(--base-700);
+  border: 1px solid rgba(var(--accent-red-rgb), 0.18);
+}
+
+.loader-sprite-fallback {
+  width: 100%;
+  height: 100%;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.5rem;
+  background: linear-gradient(
+    135deg,
+    rgba(var(--accent-red-rgb), 0.22),
+    rgba(var(--accent-yellow-rgb), 0.18)
+  );
+}
+
+.loader-sprite-fallback p {
+  color: var(--base-100);
+  text-align: center;
+}
+
+@media (max-width: 1000px) {
+  .loader-sprite-track {
+    height: 320px;
+  }
+}

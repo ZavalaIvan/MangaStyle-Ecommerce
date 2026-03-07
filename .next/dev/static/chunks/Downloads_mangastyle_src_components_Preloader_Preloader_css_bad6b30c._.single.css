@@ -1,0 +1,155 @@
+/* [project]/Downloads/mangastyle/src/components/Preloader/Preloader.css [app-client] (css) */
+.preloader-wrapper {
+  z-index: 100000;
+  width: 100%;
+  height: 100svh;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.preloader-progress, .preloader-mask, .preloader-content, .preloader-gif-layer {
+  pointer-events: none;
+  width: 100%;
+  height: 100svh;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.preloader-progress {
+  background-color: var(--base-600);
+  will-change: opacity, transform;
+  z-index: 1;
+}
+
+.preloader-progress-bar {
+  background-color: var(--accent-yellow);
+  will-change: transform;
+  transform-origin: 0;
+  width: 55%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%)scaleX(0);
+}
+
+.preloader-logo {
+  text-align: center;
+  mix-blend-mode: difference;
+  z-index: 2;
+  width: 100%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.preloader-logo h1 {
+  color: var(--base-100);
+  letter-spacing: -.02em;
+  opacity: 0;
+  font-size: 2rem;
+  font-weight: 500;
+  position: relative;
+}
+
+.preloader-mask {
+  background-color: var(--accent-red);
+  -webkit-mask: linear-gradient(var(--base-100), var(--base-100)), url("/home/mask.svg") center / 50% no-repeat;
+  -webkit-mask-composite: subtract;
+  -webkit-mask: linear-gradient(var(--base-100), var(--base-100)), url("/home/mask.svg") center / 50% no-repeat;
+  mask: linear-gradient(var(--base-100), var(--base-100)), url("/home/mask.svg") center / 50% no-repeat;
+  will-change: transform;
+  z-index: 1;
+  -webkit-mask-composite: source-out;
+  mask-composite: subtract;
+}
+
+.preloader-gif-layer {
+  will-change: opacity, transform;
+  z-index: 3;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  top: 56%;
+  left: 50%;
+  transform: translate(-50%, calc(-50% - 10rem));
+}
+
+.preloader-content {
+  z-index: 2;
+}
+
+.preloader-gif {
+  aspect-ratio: 1;
+  mix-blend-mode: difference;
+  justify-content: center;
+  align-items: center;
+  width: clamp(9rem, 18vw, 13rem);
+  display: flex;
+}
+
+.preloader-gif img {
+  object-fit: contain;
+  width: 100%;
+  height: 100%;
+}
+
+.preloader-wrapper .line, .preloader-wrapper .char {
+  will-change: transform;
+  margin-bottom: -.2em;
+  padding-bottom: .2em;
+  position: relative;
+}
+
+@media (max-width: 800px) {
+  .preloader-progress-bar {
+    width: 100%;
+    left: 0%;
+    transform: translateX(0%)scaleX(0);
+  }
+
+  .preloader-logo h1 {
+    font-size: 2rem;
+  }
+
+  .preloader-content {
+    width: 100%;
+    top: 0;
+    left: 0;
+    transform: none;
+  }
+
+  .preloader-gif-layer {
+    top: 58%;
+    transform: translate(-50%, calc(-50% - 7.75rem));
+  }
+
+  .preloader-gif {
+    width: clamp(7.5rem, 36vw, 10rem);
+  }
+
+  .preloader-mask {
+    -webkit-mask-composite: subtract;
+    -webkit-mask-image: linear-gradient(#f5f5f5, #f5f5f5), url("/home/mask.svg");
+    mask-image: linear-gradient(#f5f5f5, #f5f5f5), url("/home/mask.svg");
+    -webkit-mask-position: 0 0, center;
+    mask-position: 0 0, center;
+    -webkit-mask-size: auto, 90%;
+    mask-size: auto, 90%;
+    -webkit-mask-repeat: repeat, no-repeat;
+    mask-repeat: repeat, no-repeat;
+    -webkit-mask-clip: border-box, border-box;
+    mask-clip: border-box, border-box;
+    -webkit-mask-origin: border-box, border-box;
+    mask-origin: border-box, border-box;
+    -webkit-mask-composite: source-out;
+    mask-composite: subtract;
+    -webkit-mask-source-type: auto, auto;
+    mask-mode: match-source, match-source;
+  }
+}
+
+/*# sourceMappingURL=Downloads_mangastyle_src_components_Preloader_Preloader_css_bad6b30c._.single.css.map*/

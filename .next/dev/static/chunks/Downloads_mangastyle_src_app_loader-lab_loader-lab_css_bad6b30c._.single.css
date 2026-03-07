@@ -1,0 +1,109 @@
+/* [project]/Downloads/mangastyle/src/app/loader-lab/loader-lab.css [app-client] (css) */
+.loader-lab-page {
+  min-height: 100svh;
+  padding: 9rem 0 4rem;
+}
+
+.loader-lab-header {
+  flex-direction: column;
+  gap: 1.25rem;
+  width: min(900px, 100%);
+  margin-bottom: 3rem;
+  display: flex;
+}
+
+.loader-lab-header p.bodyCopy {
+  max-width: 760px;
+}
+
+.loader-lab-layout {
+  grid-template-columns: 1.35fr .9fr;
+  align-items: start;
+  gap: 2rem;
+  display: grid;
+}
+
+.loader-lab-preview, .loader-lab-controls {
+  border: 1px solid rgba(var(--accent-red-rgb), .14);
+  background: linear-gradient(180deg, rgba(var(--accent-yellow-rgb), .08), transparent 28%), var(--base-100);
+  border-radius: 1.5rem;
+  padding: 1.5rem;
+}
+
+.loader-lab-preview {
+  place-items: center;
+  min-height: 560px;
+  display: grid;
+}
+
+.loader-lab-controls {
+  flex-direction: column;
+  gap: 1.5rem;
+  display: flex;
+}
+
+.loader-lab-control-grid {
+  gap: 1rem;
+  display: grid;
+}
+
+.loader-lab-control {
+  background: rgba(var(--accent-red-rgb), .05);
+  border: 1px solid rgba(var(--accent-red-rgb), .08);
+  border-radius: 1rem;
+  gap: .5rem;
+  padding: 1rem;
+  display: grid;
+}
+
+.loader-lab-control span, .loader-lab-control strong {
+  color: var(--base-700);
+}
+
+.loader-lab-control input {
+  width: 100%;
+  accent-color: var(--accent-red);
+}
+
+.loader-lab-actions {
+  flex-wrap: wrap;
+  gap: .75rem;
+  display: flex;
+}
+
+.loader-lab-notes {
+  border-top: 1px dashed rgba(var(--accent-red-rgb), .24);
+  flex-direction: column;
+  gap: .75rem;
+  padding-top: .5rem;
+  display: flex;
+}
+
+.loader-lab-notes p {
+  color: var(--base-700);
+  text-transform: none;
+  line-height: 1.35;
+}
+
+.loader-lab-notes code {
+  font-family: var(--font-dm-mono), monospace;
+  background: rgba(var(--accent-yellow-rgb), .45);
+  border-radius: .35rem;
+  padding: .15rem .35rem;
+}
+
+@media (max-width: 1000px) {
+  .loader-lab-page {
+    padding-top: 7rem;
+  }
+
+  .loader-lab-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .loader-lab-preview {
+    min-height: 420px;
+  }
+}
+
+/*# sourceMappingURL=Downloads_mangastyle_src_app_loader-lab_loader-lab_css_bad6b30c._.single.css.map*/
