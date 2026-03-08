@@ -8,7 +8,6 @@
   "/api/webhooks/dlocal/route": "/api/webhooks/dlocal",
   "/checkout/page": "/checkout",
   "/checkout/resultado/page": "/checkout/resultado",
-  "/favicon.ico/route": "/favicon.ico",
   "/genesis/page": "/genesis",
   "/loader-lab/page": "/loader-lab",
   "/lookbook/page": "/lookbook",

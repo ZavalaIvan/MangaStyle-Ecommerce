@@ -114,7 +114,7 @@ export default function Index() {
             </Copy>
             <div className="about-icon">
               <Image
-                src="/logos/mangastyle-logo-invertido.png"
+                src="/logos/LOGO-MANGASTYLE-02.png"
                 alt="MangaStyle logo"
                 width={171880}
                 height={171880}

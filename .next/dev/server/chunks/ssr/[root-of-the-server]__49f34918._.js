@@ -673,7 +673,33 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$providers$2f$Transiti
 ;
 const metadata = {
     title: "MangaStyle | Playeras de Anime",
-    description: "Ecommerce de playeras de anime con enfoque streetwear, drops limitados y catalogo editorial."
+    description: "Ecommerce de playeras de anime con enfoque streetwear, drops limitados y catalogo editorial.",
+    icons: {
+        icon: [
+            {
+                url: "/Favicon/LOGO-MANGASTYLE-03.svg",
+                type: "image/svg+xml",
+                media: "(prefers-color-scheme: light)"
+            },
+            {
+                url: "/Favicon/LOGO-MANGASTYLE-04.svg",
+                type: "image/svg+xml",
+                media: "(prefers-color-scheme: dark)"
+            }
+        ],
+        shortcut: [
+            {
+                url: "/Favicon/LOGO-MANGASTYLE-03.svg",
+                type: "image/svg+xml",
+                media: "(prefers-color-scheme: light)"
+            },
+            {
+                url: "/Favicon/LOGO-MANGASTYLE-04.svg",
+                type: "image/svg+xml",
+                media: "(prefers-color-scheme: dark)"
+            }
+        ]
+    }
 };
 function RootLayout({ children }) {
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("html", {
@@ -685,41 +711,41 @@ function RootLayout({ children }) {
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$client$2d$layout$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["default"], {
                         footer: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$Footer$2f$Footer$2e$jsx__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                             fileName: "[project]/src/app/layout.js",
-                            lineNumber: 43,
+                            lineNumber: 69,
                             columnNumber: 33
                         }, void 0),
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$Menu$2f$Menu$2e$jsx__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                                 fileName: "[project]/src/app/layout.js",
-                                lineNumber: 44,
+                                lineNumber: 70,
                                 columnNumber: 13
                             }, this),
                             children
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/layout.js",
-                        lineNumber: 43,
+                        lineNumber: 69,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ShoppingCart$2f$ShoppingCart$2e$jsx__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                         fileName: "[project]/src/app/layout.js",
-                        lineNumber: 47,
+                        lineNumber: 73,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/layout.js",
-                lineNumber: 42,
+                lineNumber: 68,
                 columnNumber: 9
             }, this)
         }, void 0, false, {
             fileName: "[project]/src/app/layout.js",
-            lineNumber: 39,
+            lineNumber: 65,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/src/app/layout.js",
-        lineNumber: 38,
+        lineNumber: 64,
         columnNumber: 5
     }, this);
 }

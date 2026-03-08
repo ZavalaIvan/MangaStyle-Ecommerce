@@ -62,8 +62,8 @@
 }
 
 .about .about-copy .about-icon {
-  width: 50rem;
-  height: 50rem;
+  width: 42rem;
+  height: 42rem;
 }
 
 .about .about-copy .about-icon img {
@@ -146,6 +146,19 @@
 @media (max-width: 768px) {
   .featured-products .featured-products-list {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .hero .hero-header h1, .hero .section-footer p {
+    color: var(--base-100);
+  }
+
+  .hero .hero-img {
+    top: 30svh;
+  }
+
+  .hero .hero-img img {
+    transform-origin: top;
+    transform: scale(1.2);
   }
 }
 

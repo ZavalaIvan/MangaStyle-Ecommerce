@@ -31,6 +31,32 @@ export const metadata = {
   title: "MangaStyle | Playeras de Anime",
   description:
     "Ecommerce de playeras de anime con enfoque streetwear, drops limitados y catalogo editorial.",
+  icons: {
+    icon: [
+      {
+        url: "/Favicon/LOGO-MANGASTYLE-03.svg",
+        type: "image/svg+xml",
+        media: "(prefers-color-scheme: light)",
+      },
+      {
+        url: "/Favicon/LOGO-MANGASTYLE-04.svg",
+        type: "image/svg+xml",
+        media: "(prefers-color-scheme: dark)",
+      },
+    ],
+    shortcut: [
+      {
+        url: "/Favicon/LOGO-MANGASTYLE-03.svg",
+        type: "image/svg+xml",
+        media: "(prefers-color-scheme: light)",
+      },
+      {
+        url: "/Favicon/LOGO-MANGASTYLE-04.svg",
+        type: "image/svg+xml",
+        media: "(prefers-color-scheme: dark)",
+      },
+    ],
+  },
 };
 
 export default function RootLayout({ children }) {

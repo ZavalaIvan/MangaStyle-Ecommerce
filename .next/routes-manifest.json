@@ -93,12 +93,6 @@
       "namedRegex": "^/checkout/resultado(?:/)?$"
     },
     {
-      "page": "/favicon.ico",
-      "regex": "^/favicon\\.ico(?:/)?$",
-      "routeKeys": {},
-      "namedRegex": "^/favicon\\.ico(?:/)?$"
-    },
-    {
       "page": "/genesis",
       "regex": "^/genesis(?:/)?$",
       "routeKeys": {},

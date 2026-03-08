@@ -299,7 +299,7 @@ const Menu = () => {
       <div className="menu-header" onClick={toggleMenu}>
         <div className="menu-logo">
           <Image
-            src="/logos/head-mangastyle-w.png"
+            src="/logos/LOGO-MANGASTYLE-06.png"
             alt="MangaStyle"
             width={240}
             height={54}
