@@ -40,6 +40,12 @@
       "namedRegex": "^/_not\\-found(?:/)?$"
     },
     {
+      "page": "/api/printful/products",
+      "regex": "^/api/printful/products(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/printful/products(?:/)?$"
+    },
+    {
       "page": "/favicon.ico",
       "regex": "^/favicon\\.ico(?:/)?$",
       "routeKeys": {},

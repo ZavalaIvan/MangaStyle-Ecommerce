@@ -1,4 +1,4 @@
-:HL["/_next/static/chunks/7096c691f2c531f0.css","style"]
+:HL["/_next/static/chunks/f5d95bfd3cd41050.css","style"]
 :HL["/_next/static/media/36363bfb06833f56-s.p.d8302362.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
 :HL["/_next/static/media/3a11180d498b75c0-s.p.cb76a30f.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
 :HL["/_next/static/media/475197ef9cf73ba9-s.p.035d6fd3.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
@@ -9,6 +9,6 @@
 :HL["/_next/static/media/f9fc8f485db6b190-s.p.01f2a084.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
 :HL["/_next/static/chunks/6496e5bbc5af67e3.css","style"]
 :HL["/_next/static/chunks/75c805a552b0b1d3.css","style"]
-:HL["/_next/static/chunks/e1f6c90d532eacc2.css","style"]
+:HL["/_next/static/chunks/631d6082b6c8e364.css","style"]
 :HL["/contact-form/contact-parallax.png","image"]
-0:{"buildId":"k5qdD5zx6D0gG7liihU80","tree":{"name":"","paramType":null,"paramKey":"","hasRuntimePrefetch":false,"slots":{"children":{"name":"genesis","paramType":null,"paramKey":"genesis","hasRuntimePrefetch":false,"slots":{"children":{"name":"__PAGE__","paramType":null,"paramKey":"__PAGE__","hasRuntimePrefetch":false,"slots":null,"isRootLayout":false}},"isRootLayout":false}},"isRootLayout":true},"staleTime":300}
+0:{"buildId":"DRZCiO-lP8RS9Aq2YXRZD","tree":{"name":"","paramType":null,"paramKey":"","hasRuntimePrefetch":false,"slots":{"children":{"name":"genesis","paramType":null,"paramKey":"genesis","hasRuntimePrefetch":false,"slots":{"children":{"name":"__PAGE__","paramType":null,"paramKey":"__PAGE__","hasRuntimePrefetch":false,"slots":null,"isRootLayout":false}},"isRootLayout":false}},"isRootLayout":true},"staleTime":300}

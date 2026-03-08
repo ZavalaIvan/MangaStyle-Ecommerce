@@ -1,6 +1,7 @@
 {
   "/_global-error/page": "app/_global-error/page.js",
   "/_not-found/page": "app/_not-found/page.js",
+  "/api/printful/products/route": "app/api/printful/products/route.js",
   "/favicon.ico/route": "app/favicon.ico/route.js",
   "/genesis/page": "app/genesis/page.js",
   "/loader-lab/page": "app/loader-lab/page.js",
