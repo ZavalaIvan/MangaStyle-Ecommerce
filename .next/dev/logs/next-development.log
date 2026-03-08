@@ -1,4 +1,7 @@
-[00:00:02.767] Server  LOG      ✓ Ready in 1984ms
-[00:00:08.124] Server  LOG      ○ Compiling / ...
-[02:32:13.347] Server  LOG        Reload env: .env.local
-[02:32:13.515] Server  LOG      ✓ Compiled in 109ms
+[00:00:02.769] Server  LOG      ✓ Ready in 2.2s
+[00:00:57.682] Server  LOG      ○ Compiling / ...
+[00:01:03.340] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:01:19.240] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:01:19.397] Browser WARN    GSAP target  not found. https://gsap.com
+[00:01:19.397] Browser WARN    GSAP target  not found. https://gsap.com
+[00:01:19.397] Browser WARN    GSAP target  not found. https://gsap.com

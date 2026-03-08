@@ -19,7 +19,24 @@
     "afterFiles": [],
     "fallback": []
   },
-  "dynamicRoutes": [],
+  "dynamicRoutes": [
+    {
+      "page": "/api/printful/products/[id]",
+      "regex": "^/api/printful/products/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/printful/products/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/tienda/[id]",
+      "regex": "^/tienda/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/tienda/(?<nxtPid>[^/]+?)(?:/)?$"
+    }
+  ],
   "staticRoutes": [
     {
       "page": "/",
@@ -40,10 +57,40 @@
       "namedRegex": "^/_not\\-found(?:/)?$"
     },
     {
+      "page": "/api/checkout/dlocal",
+      "regex": "^/api/checkout/dlocal(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/checkout/dlocal(?:/)?$"
+    },
+    {
+      "page": "/api/checkout/dlocal/callback",
+      "regex": "^/api/checkout/dlocal/callback(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/checkout/dlocal/callback(?:/)?$"
+    },
+    {
       "page": "/api/printful/products",
       "regex": "^/api/printful/products(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/api/printful/products(?:/)?$"
+    },
+    {
+      "page": "/api/webhooks/dlocal",
+      "regex": "^/api/webhooks/dlocal(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/webhooks/dlocal(?:/)?$"
+    },
+    {
+      "page": "/checkout",
+      "regex": "^/checkout(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/checkout(?:/)?$"
+    },
+    {
+      "page": "/checkout/resultado",
+      "regex": "^/checkout/resultado(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/checkout/resultado(?:/)?$"
     },
     {
       "page": "/favicon.ico",

@@ -1,0 +1,3 @@
+{
+  "/api/webhooks/dlocal/route": "app/api/webhooks/dlocal/route.js"
+}

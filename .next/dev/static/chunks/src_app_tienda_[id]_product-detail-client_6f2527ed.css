@@ -1,0 +1,138 @@
+/* [project]/src/app/tienda/[id]/product-detail-client.css [app-client] (css) */
+.product-detail-page {
+  padding: 10rem 2rem 4rem;
+}
+
+.product-detail-shell {
+  grid-template-columns: minmax(0, 1.1fr) minmax(320px, .9fr);
+  align-items: start;
+  gap: 3rem;
+  width: min(1200px, 100%);
+  margin: 0 auto;
+  display: grid;
+}
+
+.product-detail-media {
+  position: sticky;
+  top: 8rem;
+}
+
+.product-detail-image {
+  aspect-ratio: 1 / 1.15;
+  object-fit: cover;
+  background: #ffffff0a;
+  border: 1px solid #ffffff1f;
+  border-radius: 1.5rem;
+  width: 100%;
+}
+
+.product-detail-image-empty {
+  background: #ffffff0f;
+}
+
+.product-detail-copy h1 {
+  margin-bottom: 1rem;
+  font-size: clamp(2.5rem, 5vw, 4.75rem);
+  line-height: .95;
+}
+
+.product-detail-kicker, .product-detail-label {
+  font-family: var(--font-dm-mono), monospace;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: #ffffff8c;
+  font-size: .8rem;
+}
+
+.product-detail-price {
+  margin-bottom: 2rem;
+  font-size: 1.5rem;
+}
+
+.product-detail-section {
+  margin-bottom: 2rem;
+}
+
+.product-detail-options {
+  flex-wrap: wrap;
+  gap: .75rem;
+  margin-top: .9rem;
+  display: flex;
+}
+
+.product-detail-chip, .product-detail-size, .product-detail-button {
+  appearance: none;
+  color: inherit;
+  background: none;
+  border: 1px solid #ffffff2e;
+  transition: background-color .18s, border-color .18s, color .18s, transform .18s;
+}
+
+.product-detail-chip, .product-detail-size {
+  font-family: var(--font-dm-mono), monospace;
+  border-radius: 999px;
+  padding: .9rem 1.2rem;
+  font-size: .85rem;
+}
+
+.product-detail-size {
+  border-radius: .95rem;
+  min-width: 4rem;
+}
+
+.product-detail-chip:hover, .product-detail-size:hover, .product-detail-button:hover {
+  border-color: #ffffff80;
+  transform: translateY(-1px);
+}
+
+.product-detail-chip.is-active, .product-detail-size.is-active, .product-detail-button {
+  color: #111;
+  background: #f3f1eb;
+  border-color: #f3f1eb;
+}
+
+.product-detail-meta {
+  background: #ffffff0a;
+  border: 1px solid #ffffff1f;
+  border-radius: 1.25rem;
+  gap: .65rem;
+  margin-bottom: 2rem;
+  padding: 1.4rem;
+  font-size: .95rem;
+  display: grid;
+}
+
+.product-detail-actions {
+  display: flex;
+}
+
+.product-detail-button {
+  border-radius: 1.25rem;
+  width: 100%;
+  padding: 1rem 1.4rem;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.product-detail-button:disabled {
+  opacity: .45;
+  cursor: not-allowed;
+  transform: none;
+}
+
+@media (max-width: 900px) {
+  .product-detail-page {
+    padding: 8rem 1.25rem 3rem;
+  }
+
+  .product-detail-shell {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .product-detail-media {
+    position: static;
+  }
+}
+
+/*# sourceMappingURL=src_app_tienda_%5Bid%5D_product-detail-client_6f2527ed.css.map*/

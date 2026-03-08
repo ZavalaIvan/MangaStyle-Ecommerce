@@ -1,7 +1,7 @@
 {
   "pages": {},
   "app": {
-    "[project]/Downloads/mangastyle/src/app/_not-found/page": [
+    "[project]/src/app/_not-found/page": [
       "static/media/6c6a3def8289aaff-s.p.99c718a3.woff2",
       "static/media/3a11180d498b75c0-s.p.cb76a30f.woff2",
       "static/media/475197ef9cf73ba9-s.p.035d6fd3.woff2",

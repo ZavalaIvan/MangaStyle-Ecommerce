@@ -99,7 +99,7 @@
         "transform": "lodash/{{member}}"
       }
     },
-    "outputFileTracingRoot": "C:\\Users\\HP",
+    "outputFileTracingRoot": "C:\\Users\\HP\\Downloads\\mangastyle",
     "cacheComponents": false,
     "cacheLife": {
       "default": {
@@ -289,12 +289,12 @@
     "bundlePagesRouterDependencies": false,
     "configFileName": "next.config.mjs",
     "turbopack": {
-      "root": "C:\\Users\\HP"
+      "root": "C:\\Users\\HP\\Downloads\\mangastyle"
     },
     "distDirRoot": ".next"
   },
   "appDir": "C:\\Users\\HP\\Downloads\\mangastyle",
-  "relativeAppDir": "Downloads\\mangastyle",
+  "relativeAppDir": "",
   "files": [
     ".next\\routes-manifest.json",
     ".next\\server\\pages-manifest.json",

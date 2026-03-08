@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 1, "column": 0}, "map": {"version":3,"sources":["file:///C:/Users/HP/Downloads/mangastyle/src/app/checkout/resultado/resultado.css"],"sourcesContent":[".checkout-result-page {\n  min-height: 100vh;\n  display: grid;\n  place-items: center;\n  padding: 8rem 1.5rem 3rem;\n}\n\n.checkout-result-card {\n  width: min(620px, 100%);\n  padding: 2rem;\n  border-radius: 1.25rem;\n  border: 1px solid rgba(255, 255, 255, 0.12);\n  background: rgba(255, 255, 255, 0.04);\n}\n\n.checkout-result-kicker {\n  font-family: var(--font-dm-mono), monospace;\n  letter-spacing: 0.14em;\n  text-transform: uppercase;\n  color: rgba(255, 255, 255, 0.55);\n  margin-bottom: 0.8rem;\n}\n\n.checkout-result-card h1 {\n  margin-bottom: 1rem;\n  font-size: clamp(2.2rem, 4vw, 3.8rem);\n}\n\n.checkout-result-card p {\n  margin-bottom: 0.7rem;\n}\n\n.checkout-result-actions {\n  display: flex;\n  gap: 1rem;\n  flex-wrap: wrap;\n  margin-top: 1.5rem;\n}\n\n.checkout-result-actions a {\n  padding: 0.9rem 1.15rem;\n  border-radius: 0.9rem;\n  border: 1px solid rgba(255, 255, 255, 0.15);\n}\n"],"names":[],"mappings":"AAAA;;;;;;;AAOA;;;;;;;;AAQA;;;;;;;;AAQA;;;;;AAKA;;;;AAIA;;;;;;;AAOA"}}]
+}

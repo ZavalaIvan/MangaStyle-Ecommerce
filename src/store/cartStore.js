@@ -1,37 +1,54 @@
 import { create } from "zustand";
 
-export const useCartStore = create((set, get) => ({
+function getCartItemKey(product) {
+  if (product?.variantId) {
+    return `variant-${product.variantId}`;
+  }
+
+  if (product?.productId) {
+    return `product-${product.productId}`;
+  }
+
+  return `name-${product?.name || "item"}`;
+}
+
+export const useCartStore = create((set) => ({
   cartItems: [],
 
   addToCart: (product) => {
+    const cartKey = getCartItemKey(product);
+
     set((state) => {
       const existingItem = state.cartItems.find(
-        (item) => item.name === product.name
+        (item) => item.cartKey === cartKey
       );
-      if (existingItem) {
-        const updatedItems = state.cartItems.map((item) => {
-          if (item.name === product.name) {
-            const currentQuantity = Number(item.quantity) || 1;
-            const newQuantity = currentQuantity + 1;
 
-            return { ...item, quantity: newQuantity };
-          }
-          return item;
-        });
-        return { cartItems: updatedItems };
+      if (existingItem) {
+        return {
+          cartItems: state.cartItems.map((item) =>
+            item.cartKey === cartKey
+              ? { ...item, quantity: (Number(item.quantity) || 1) + 1 }
+              : item
+          ),
+        };
       }
 
-      const newItem = { ...product, quantity: 1 };
-
       return {
-        cartItems: [...state.cartItems, newItem],
+        cartItems: [
+          ...state.cartItems,
+          {
+            ...product,
+            cartKey,
+            quantity: 1,
+          },
+        ],
       };
     });
   },
 
-  removeFromCart: (productName) => {
+  removeFromCart: (cartKey) => {
     set((state) => ({
-      cartItems: state.cartItems.filter((item) => item.name !== productName),
+      cartItems: state.cartItems.filter((item) => item.cartKey !== cartKey),
     }));
   },
 }));
@@ -44,7 +61,7 @@ export const useCartCount = () =>
 export const useCartSubtotal = () =>
   useCartStore((state) =>
     state.cartItems.reduce(
-      (total, item) => total + parseFloat(item.price) * (item.quantity || 1),
+      (total, item) => total + parseFloat(item.price || "0") * (item.quantity || 1),
       0
     )
   );

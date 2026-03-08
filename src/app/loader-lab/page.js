@@ -3,8 +3,8 @@
 import "./loader-lab.css";
 import { useState } from "react";
 
-import Copy from "@/components/Copy/Copy";
-import LoaderSpriteLab from "@/components/LoaderSpriteLab/LoaderSpriteLab";
+import Copy from "../../components/Copy/Copy";
+import LoaderSpriteLab from "../../components/LoaderSpriteLab/LoaderSpriteLab";
 
 const DEFAULT_LAB_VALUES = {
   frameCount: 22,

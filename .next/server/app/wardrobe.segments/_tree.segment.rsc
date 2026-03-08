@@ -11,4 +11,4 @@
 :HL["/_next/static/chunks/447cca4e73cec99d.css","style"]
 :HL["/_next/static/chunks/75c805a552b0b1d3.css","style"]
 :HL["/contact-form/contact-parallax.png","image"]
-0:{"buildId":"DRZCiO-lP8RS9Aq2YXRZD","tree":{"name":"","paramType":null,"paramKey":"","hasRuntimePrefetch":false,"slots":{"children":{"name":"wardrobe","paramType":null,"paramKey":"wardrobe","hasRuntimePrefetch":false,"slots":{"children":{"name":"__PAGE__","paramType":null,"paramKey":"__PAGE__","hasRuntimePrefetch":false,"slots":null,"isRootLayout":false}},"isRootLayout":false}},"isRootLayout":true},"staleTime":300}
+0:{"buildId":"A0G2VG0QJQ7QJ3luOiRIk","tree":{"name":"","paramType":null,"paramKey":"","hasRuntimePrefetch":false,"slots":{"children":{"name":"wardrobe","paramType":null,"paramKey":"wardrobe","hasRuntimePrefetch":false,"slots":{"children":{"name":"__PAGE__","paramType":null,"paramKey":"__PAGE__","hasRuntimePrefetch":false,"slots":null,"isRootLayout":false}},"isRootLayout":false}},"isRootLayout":true},"staleTime":300}

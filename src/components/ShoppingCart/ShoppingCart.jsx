@@ -1,13 +1,13 @@
 "use client";
 import "./ShoppingCart.css";
 import { useState, useEffect } from "react";
+import Link from "next/link";
 
-import { products } from "@/app/wardrobe/products";
 import {
   useCartStore,
   useCartCount,
   useCartSubtotal,
-} from "@/store/cartStore";
+} from "../../store/cartStore";
 
 const ShoppingCart = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -42,9 +42,9 @@ const ShoppingCart = () => {
         className={`cart-sidebar ${isOpen ? "open" : ""}`}
         onWheel={(e) => {
           const target = e.currentTarget;
-          const cartItems = target.querySelector(".cart-items");
-          if (cartItems) {
-            const { scrollTop, scrollHeight, clientHeight } = cartItems;
+          const cartItemsContainer = target.querySelector(".cart-items");
+          if (cartItemsContainer) {
+            const { scrollTop, scrollHeight, clientHeight } = cartItemsContainer;
             const isAtTop = scrollTop === 0;
             const isAtBottom = scrollTop + clientHeight >= scrollHeight - 1;
 
@@ -76,14 +76,13 @@ const ShoppingCart = () => {
               </div>
             ) : (
               cartItems.map((item, index) => {
-                const productIndex =
-                  products.findIndex((p) => p.name === item.name) + 1;
                 const quantity = Number(item.quantity) || 1;
+
                 return (
-                  <div key={`${item.name}-${index}`} className="cart-item">
+                  <div key={`${item.cartKey}-${index}`} className="cart-item">
                     <div className="cart-item-image">
                       <img
-                        src={`/products/product_${productIndex}.png`}
+                        src={item.image || "/products/product_1.png"}
                         alt={item.name}
                       />
                     </div>
@@ -94,10 +93,20 @@ const ShoppingCart = () => {
                           <span className="cart-item-quantity">{quantity}</span>
                         )}
                       </div>
+                      {item.color || item.size ? (
+                        <p className="cart-item-variant">
+                          {[item.color, item.size].filter(Boolean).join(" / ")}
+                        </p>
+                      ) : null}
                       <p className="cart-item-price">${item.price}</p>
+                      {item.href ? (
+                        <Link href={item.href} className="cart-item-remove">
+                          Ver producto
+                        </Link>
+                      ) : null}
                       <button
                         className="cart-item-remove"
-                        onClick={() => removeFromCart(item.name)}
+                        onClick={() => removeFromCart(item.cartKey)}
                       >
                         Quitar
                       </button>
@@ -113,7 +122,9 @@ const ShoppingCart = () => {
                 <span>Total</span>
                 <span>${subtotal.toFixed(2)}</span>
               </div>
-              <button className="cart-checkout">Finalizar compra</button>
+              <Link href="/checkout" className="cart-checkout">
+                Finalizar compra
+              </Link>
             </div>
           )}
         </div>

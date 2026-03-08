@@ -18,5 +18,8 @@
     "react-icons": "^5.5.0",
     "three": "0.158.0",
     "zustand": "^5.0.9"
+  },
+  "devDependencies": {
+    "@types/react": "19.2.14"
   }
 }

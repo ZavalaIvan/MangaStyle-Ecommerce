@@ -1,0 +1,3 @@
+{
+  "/api/printful/products/[id]/route": "app/api/printful/products/[id]/route.js"
+}
