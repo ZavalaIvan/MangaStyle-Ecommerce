@@ -37,6 +37,14 @@ function getProductPrice(product) {
   return "0";
 }
 
+function getProductStatusClass(product) {
+  if (product?.is_ignored) {
+    return "is-hidden";
+  }
+
+  return product?.in_stock === false ? "is-soldout" : "is-live";
+}
+
 const Product = ({
   product,
   productIndex,
@@ -75,6 +83,20 @@ const Product = ({
 
   return (
     <div className={`product ${className}`} ref={innerRef} style={style}>
+      <div className="product-badges">
+        {product?.categoryLabel ? (
+          <span className="product-badge product-badge-category">
+            {product.categoryLabel}
+          </span>
+        ) : null}
+        {product?.stockLabel ? (
+          <span
+            className={`product-badge product-badge-status ${getProductStatusClass(product)}`}
+          >
+            {product.stockLabel}
+          </span>
+        ) : null}
+      </div>
       <Link href={href} className="product-img" onClick={handleImageClick}>
         <img src={imageSrc} alt={product?.name || "Producto"} />
       </Link>
@@ -82,6 +104,10 @@ const Product = ({
         <div className="product-info-wrapper">
           <p>{product?.name}</p>
           <p>${price}</p>
+        </div>
+        <div className="product-meta">
+          {product?.colorCount ? <span>{product.colorCount} colores</span> : null}
+          {product?.sizeRangeLabel ? <span>Tallas {product.sizeRangeLabel}</span> : null}
         </div>
         {showAddToCart && (
           <button className="add-to-cart-btn" onClick={handleAddToCart}>

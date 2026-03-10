@@ -4,61 +4,71 @@ import { useEffect, useMemo, useRef, useState } from "react";
 
 import Product from "../../components/Product/Product";
 import Copy from "../../components/Copy/Copy";
+import { mapProductForCard } from "../../lib/productCard";
 
 import { gsap } from "gsap";
 
-const FILTER_TAGS = ["All", "Disponibles", "Ocultos"];
+const STOCK_FILTERS = ["Catalogo", "Disponibles", "Agotados"];
 
-const COLOR_SWATCHES = {
-  black: "#111111",
-  white: "#f4f1ea",
-  grey: "#7a7a7a",
-  gray: "#7a7a7a",
-  stone: "#b7ab98",
-  ice: "#d6e4ef",
-  navy: "#233a5a",
-  red: "#9f2b2b",
-  blue: "#2d5c9a",
-  green: "#3e6b4d",
-  yellow: "#d0a62a",
-  pink: "#cf84ad",
-  purple: "#725c93",
-  orange: "#b96d2d",
-};
+const SORT_OPTIONS = [
+  { value: "featured", label: "Destacados" },
+  { value: "price-asc", label: "Precio: menor a mayor" },
+  { value: "price-desc", label: "Precio: mayor a menor" },
+  { value: "name-asc", label: "Nombre: A-Z" },
+];
 
-function mapProductForCard(product) {
-  const defaultVariant = product?.variants?.[0] || null;
+function formatPrice(value, currency = "USD") {
+  if (!Number.isFinite(value)) {
+    return "--";
+  }
 
-  return {
-    ...product,
-    price: product?.price || "0",
-    image: product?.thumbnail_url || defaultVariant?.image || null,
-    href: product?.id ? `/tienda/${product.id}` : "/wardrobe",
-    defaultSyncVariantId: defaultVariant?.id || null,
-    defaultVariantId: defaultVariant?.variant_id || null,
-    defaultColor: defaultVariant?.color || product?.colors?.[0] || null,
-    defaultSize: defaultVariant?.size || product?.sizes?.[0] || null,
-    sku: defaultVariant?.sku || null,
-  };
+  try {
+    return new Intl.NumberFormat("es-MX", {
+      style: "currency",
+      currency,
+      maximumFractionDigits: 0,
+    }).format(value);
+  } catch {
+    return `$${value.toFixed(0)}`;
+  }
 }
 
-function getColorSwatchStyle(color) {
-  const normalized = color?.toLowerCase() || "";
+function sortProducts(products, sortBy) {
+  const items = [...products];
 
-  return {
-    backgroundColor: COLOR_SWATCHES[normalized] || "#999999",
-  };
+  switch (sortBy) {
+    case "price-asc":
+      return items.sort((a, b) => a.priceValue - b.priceValue);
+    case "price-desc":
+      return items.sort((a, b) => b.priceValue - a.priceValue);
+    case "name-asc":
+      return items.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+    default:
+      return items.sort((a, b) => {
+        if (a.in_stock !== b.in_stock) {
+          return a.in_stock ? -1 : 1;
+        }
+
+        return a.priceValue - b.priceValue;
+      });
+  }
 }
 
 export default function Wardrobe() {
-  const [activeTag, setActiveTag] = useState("All");
-  const [activeColor, setActiveColor] = useState(null);
+  const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
+  const [stockFilter, setStockFilter] = useState("Catalogo");
+  const [activeCategory, setActiveCategory] = useState("all");
+  const [activeColor, setActiveColor] = useState("all");
+  const [activeSize, setActiveSize] = useState("all");
+  const [sortBy, setSortBy] = useState("featured");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [minPrice, setMinPrice] = useState("");
+  const [maxPrice, setMaxPrice] = useState("");
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
-  const [isAnimating, setIsAnimating] = useState(false);
+  const [showBackToTop, setShowBackToTop] = useState(false);
   const productRefs = useRef([]);
-  const isInitialMount = useRef(true);
 
   useEffect(() => {
     async function loadProducts() {
@@ -90,52 +100,136 @@ export default function Wardrobe() {
     loadProducts();
   }, []);
 
+  useEffect(() => {
+    function handleScroll() {
+      setShowBackToTop(window.scrollY > 480);
+    }
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const storefrontProducts = useMemo(
+    () => products.filter((product) => !product.is_ignored),
+    [products]
+  );
+
+  const priceBounds = useMemo(() => {
+    const source = storefrontProducts.length > 0 ? storefrontProducts : products;
+    const values = source
+      .map((product) => product.priceValue)
+      .filter((value) => Number.isFinite(value) && value > 0);
+
+    if (values.length === 0) {
+      return { min: 0, max: 0 };
+    }
+
+    return {
+      min: Math.min(...values),
+      max: Math.max(...values),
+    };
+  }, [products, storefrontProducts]);
+
+  const availableCategories = useMemo(() => {
+    return [...new Set(storefrontProducts.map((product) => product.categoryLabel))].sort(
+      (a, b) => a.localeCompare(b)
+    );
+  }, [storefrontProducts]);
+
   const availableColors = useMemo(() => {
-    const colors = products.flatMap((product) => product.colors || []);
-    return [...new Set(colors)].sort((a, b) => a.localeCompare(b));
-  }, [products]);
+    return [
+      ...new Set(storefrontProducts.flatMap((product) => product.colors || [])),
+    ].sort((a, b) => a.localeCompare(b));
+  }, [storefrontProducts]);
+
+  const availableSizes = useMemo(() => {
+    const sizes = [
+      ...new Set(storefrontProducts.flatMap((product) => product.sizes || [])),
+    ];
+    const order = ["XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL", "5XL"];
+
+    return sizes.sort((a, b) => {
+      const indexA = order.indexOf(a);
+      const indexB = order.indexOf(b);
+
+      if (indexA === -1 && indexB === -1) {
+        return a.localeCompare(b);
+      }
+
+      if (indexA === -1) {
+        return 1;
+      }
+
+      if (indexB === -1) {
+        return -1;
+      }
+
+      return indexA - indexB;
+    });
+  }, [storefrontProducts]);
 
   const filteredProducts = useMemo(() => {
-    return products.filter((product) => {
-      if (activeTag === "Disponibles" && !product.in_stock) {
+    const query = searchTerm.trim().toLowerCase();
+    const parsedMin = Number.parseFloat(minPrice);
+    const parsedMax = Number.parseFloat(maxPrice);
+
+    const filtered = products.filter((product) => {
+      if (stockFilter === "Catalogo" && product.is_ignored) {
         return false;
       }
 
-      if (activeTag === "Ocultos" && !product.is_ignored) {
+      if (stockFilter === "Disponibles" && (!product.in_stock || product.is_ignored)) {
         return false;
       }
 
-      if (activeColor && !(product.colors || []).includes(activeColor)) {
+      if (stockFilter === "Agotados" && (product.in_stock || product.is_ignored)) {
         return false;
       }
 
-      return activeTag !== "Ocultos" || product.is_ignored;
+      if (
+        activeCategory !== "all" &&
+        product.categoryLabel?.toLowerCase() !== activeCategory
+      ) {
+        return false;
+      }
+
+      if (activeColor !== "all" && !(product.colors || []).includes(activeColor)) {
+        return false;
+      }
+
+      if (activeSize !== "all" && !(product.sizes || []).includes(activeSize)) {
+        return false;
+      }
+
+      if (query && !product.searchText.includes(query)) {
+        return false;
+      }
+
+      if (Number.isFinite(parsedMin) && product.priceValue < parsedMin) {
+        return false;
+      }
+
+      if (Number.isFinite(parsedMax) && product.priceValue > parsedMax) {
+        return false;
+      }
+
+      return true;
     });
-  }, [activeColor, activeTag, products]);
 
-  const handleFilterChange = (newTag, newColor) => {
-    if (isAnimating) {
-      return;
-    }
-
-    if (newTag === activeTag && newColor === activeColor) {
-      return;
-    }
-
-    setIsAnimating(true);
-    setActiveTag(newTag);
-    setActiveColor(newColor);
-
-    gsap.killTweensOf(productRefs.current);
-
-    gsap.to(productRefs.current, {
-      opacity: 0,
-      scale: 0.5,
-      duration: 0.25,
-      stagger: 0.05,
-      ease: "power3.out",
-    });
-  };
+    return sortProducts(filtered, sortBy);
+  }, [
+    activeCategory,
+    activeColor,
+    activeSize,
+    maxPrice,
+    minPrice,
+    products,
+    searchTerm,
+    sortBy,
+    stockFilter,
+  ]);
 
   useEffect(() => {
     productRefs.current = productRefs.current.slice(0, filteredProducts.length);
@@ -143,66 +237,227 @@ export default function Wardrobe() {
 
     gsap.fromTo(
       productRefs.current,
-      { opacity: 0, scale: 0.5 },
+      { opacity: 0, y: 18 },
       {
         opacity: 1,
-        scale: 1,
-        duration: isInitialMount.current ? 0.5 : 0.25,
+        y: 0,
+        duration: 0.35,
         stagger: 0.05,
         ease: "power3.out",
-        onComplete: () => {
-          setIsAnimating(false);
-          isInitialMount.current = false;
-        },
       }
     );
   }, [filteredProducts]);
 
+  function clearFilters() {
+    setStockFilter("Catalogo");
+    setActiveCategory("all");
+    setActiveColor("all");
+    setActiveSize("all");
+    setSortBy("featured");
+    setSearchTerm("");
+    setMinPrice("");
+    setMaxPrice("");
+  }
+
+  function scrollToTop() {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  const isFiltered =
+    stockFilter !== "Catalogo" ||
+    activeCategory !== "all" ||
+    activeColor !== "all" ||
+    activeSize !== "all" ||
+    sortBy !== "featured" ||
+    searchTerm !== "" ||
+    minPrice !== "" ||
+    maxPrice !== "";
+
+  const startingPrice = priceBounds.min > 0 ? formatPrice(priceBounds.min) : "--";
+
   return (
-    <>
-      <section className="products-header">
-        <div className="container">
-          <Copy animateOnScroll={false} delay={0.65}>
-            <h1>Catalogo de playeras anime</h1>
-          </Copy>
-          <div className="products-header-divider"></div>
-          <div className="product-filter-bar">
-            <div className="filter-bar-header">
-              <p className="bodyCopy">
-                {isLoading ? "Cargando productos..." : `${products.length} productos`}
+    <main className="wardrobe-page">
+      <section className="wardrobe-hero">
+        <div className="container wardrobe-hero-grid">
+          <div className="wardrobe-hero-copy">
+            <Copy animateOnScroll={false} delay={0.55}>
+              <p className="wardrobe-kicker">Catalogo completo</p>
+            </Copy>
+            <Copy animateOnScroll={false} delay={0.65}>
+              <h1>Wardrobe MangaStyle</h1>
+            </Copy>
+            <Copy animateOnScroll={false} delay={0.75}>
+              <p className="bodyCopy wardrobe-intro">
+                Filtra por categoria, talla, color o precio y encuentra la pieza
+                exacta del drop actual.
               </p>
+            </Copy>
+          </div>
+
+          <div className="wardrobe-hero-panel">
+            <div className="wardrobe-metric">
+              <span>Productos</span>
+              <strong>{storefrontProducts.length || products.length}</strong>
             </div>
-            <div className="filter-bar-tags">
-              {FILTER_TAGS.map((tag) => (
-                <p
-                  key={tag}
-                  className={`bodyCopy ${activeTag === tag ? "active" : ""}`}
-                  onClick={() => handleFilterChange(tag, activeColor)}
-                >
-                  {tag}
+            <div className="wardrobe-metric">
+              <span>Categorias</span>
+              <strong>{availableCategories.length}</strong>
+            </div>
+            <div className="wardrobe-metric">
+              <span>Desde</span>
+              <strong>{startingPrice}</strong>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="wardrobe-toolbar-section">
+        <div className="container">
+          <div className="wardrobe-toolbar">
+            <div className="wardrobe-toolbar-top">
+              <div>
+                <p className="bodyCopy">
+                  {isLoading
+                    ? "Sincronizando catalogo desde Printful..."
+                    : `${filteredProducts.length} productos listos para explorar`}
                 </p>
-              ))}
-            </div>
-            <div className="filter-bar-colors">
-              {availableColors.map((color) => (
-                <span
-                  key={color}
-                  title={color}
-                  className={`color-selector ${color.toLowerCase()} ${
-                    activeColor === color ? "active" : ""
+              </div>
+
+              <div className="wardrobe-toolbar-actions">
+                <button
+                  type="button"
+                  className={`wardrobe-mobile-toggle ${
+                    isMobileFiltersOpen ? "is-active" : ""
                   }`}
-                  onClick={() =>
-                    handleFilterChange(
-                      activeTag,
-                      activeColor === color ? null : color
-                    )
-                  }
-                  style={{
-                    ...getColorSwatchStyle(color),
-                    cursor: isAnimating ? "not-allowed" : "pointer",
-                  }}
-                ></span>
-              ))}
+                  onClick={() => setIsMobileFiltersOpen((current) => !current)}
+                  aria-expanded={isMobileFiltersOpen}
+                  aria-controls="wardrobe-filters-panel"
+                >
+                  {isMobileFiltersOpen ? "Cerrar filtros" : "Abrir filtros"}
+                </button>
+
+                <label className="wardrobe-search">
+                  <span>Buscar</span>
+                  <input
+                    type="text"
+                    value={searchTerm}
+                    onChange={(event) => setSearchTerm(event.target.value)}
+                    placeholder="Nombre, color o tipo"
+                  />
+                </label>
+
+                <label className="wardrobe-sort">
+                  <span>Ordenar</span>
+                  <select
+                    value={sortBy}
+                    onChange={(event) => setSortBy(event.target.value)}
+                  >
+                    {SORT_OPTIONS.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              </div>
+            </div>
+
+            <div
+              id="wardrobe-filters-panel"
+              className={`wardrobe-filters-panel ${
+                isMobileFiltersOpen ? "is-open" : ""
+              }`}
+            >
+              <div className="wardrobe-chip-row">
+                {STOCK_FILTERS.map((tag) => (
+                  <button
+                    key={tag}
+                    type="button"
+                    className={stockFilter === tag ? "is-active" : ""}
+                    onClick={() => setStockFilter(tag)}
+                  >
+                    {tag}
+                  </button>
+                ))}
+              </div>
+
+              <div className="wardrobe-filters-grid">
+                <label>
+                  <span>Categoria</span>
+                  <select
+                    value={activeCategory}
+                    onChange={(event) => setActiveCategory(event.target.value)}
+                  >
+                    <option value="all">Todas</option>
+                    {availableCategories.map((category) => (
+                      <option key={category} value={category.toLowerCase()}>
+                        {category}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+
+                <label>
+                  <span>Color</span>
+                  <select
+                    value={activeColor}
+                    onChange={(event) => setActiveColor(event.target.value)}
+                  >
+                    <option value="all">Todos</option>
+                    {availableColors.map((color) => (
+                      <option key={color} value={color}>
+                        {color}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+
+                <label>
+                  <span>Talla</span>
+                  <select
+                    value={activeSize}
+                    onChange={(event) => setActiveSize(event.target.value)}
+                  >
+                    <option value="all">Todas</option>
+                    {availableSizes.map((size) => (
+                      <option key={size} value={size}>
+                        {size}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+
+                <label>
+                  <span>Precio minimo</span>
+                  <input
+                    type="number"
+                    min={priceBounds.min || 0}
+                    placeholder={priceBounds.min ? `${priceBounds.min}` : "0"}
+                    value={minPrice}
+                    onChange={(event) => setMinPrice(event.target.value)}
+                  />
+                </label>
+
+                <label>
+                  <span>Precio maximo</span>
+                  <input
+                    type="number"
+                    min={priceBounds.min || 0}
+                    placeholder={priceBounds.max ? `${priceBounds.max}` : "0"}
+                    value={maxPrice}
+                    onChange={(event) => setMaxPrice(event.target.value)}
+                  />
+                </label>
+
+                <button
+                  type="button"
+                  className="wardrobe-clear-btn"
+                  onClick={clearFilters}
+                  disabled={!isFiltered}
+                >
+                  Limpiar filtros
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -211,15 +466,24 @@ export default function Wardrobe() {
       <section className="product-list">
         <div className="container">
           {error ? (
-            <Copy animateOnScroll={false}>
-              <p className="bodyCopy">{error}</p>
-            </Copy>
+            <div className="wardrobe-feedback">
+              <Copy animateOnScroll={false}>
+                <p className="bodyCopy">{error}</p>
+              </Copy>
+            </div>
           ) : null}
 
-          {!error && isLoading ? (
-            <Copy animateOnScroll={false}>
-              <p className="bodyCopy">Sincronizando catalogo desde Printful...</p>
-            </Copy>
+          {!error && !isLoading && filteredProducts.length === 0 ? (
+            <div className="wardrobe-empty-state">
+              <p>Sin coincidencias</p>
+              <p className="bodyCopy">
+                Ajusta filtros o limpia la busqueda para ver mas productos del
+                catalogo.
+              </p>
+              <button type="button" onClick={clearFilters}>
+                Ver todo el catalogo
+              </button>
+            </div>
           ) : null}
 
           {!error &&
@@ -231,11 +495,19 @@ export default function Wardrobe() {
                 productIndex={index + 1}
                 showAddToCart={true}
                 innerRef={(element) => (productRefs.current[index] = element)}
-                style={{ opacity: 0, transform: "scale(0.5)" }}
               />
             ))}
         </div>
       </section>
-    </>
+
+      <button
+        type="button"
+        className={`wardrobe-back-to-top ${showBackToTop ? "is-visible" : ""}`}
+        onClick={scrollToTop}
+        aria-label="Volver al inicio"
+      >
+        Top
+      </button>
+    </main>
   );
 }

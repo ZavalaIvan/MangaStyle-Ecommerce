@@ -6,6 +6,7 @@ import { useRef, useState, useEffect } from "react";
 
 import gsap from "gsap";
 import { SplitText } from "gsap/SplitText";
+import { mapProductForCard } from "../../lib/productCard";
 
 gsap.registerPlugin(SplitText);
 
@@ -14,6 +15,7 @@ const Menu = () => {
   const [isAnimating, setIsAnimating] = useState(false);
   const [isMenuVisible, setIsMenuVisible] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
+  const [featuredProducts, setFeaturedProducts] = useState([]);
 
   const menuRef = useRef(null);
   const menuOverlayRef = useRef(null);
@@ -244,6 +246,27 @@ const Menu = () => {
   }, []);
 
   useEffect(() => {
+    async function loadFeaturedProducts() {
+      try {
+        const response = await fetch("/api/printful/products", {
+          cache: "no-store",
+        });
+        const data = await response.json();
+
+        if (!response.ok || !data?.ok) {
+          throw new Error("No se pudieron cargar los productos del menu");
+        }
+
+        setFeaturedProducts((data.products || []).map(mapProductForCard).slice(0, 2));
+      } catch {
+        setFeaturedProducts([]);
+      }
+    }
+
+    loadFeaturedProducts();
+  }, []);
+
+  useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 1000);
     };
@@ -342,42 +365,38 @@ const Menu = () => {
               >
                 <h4>Nosotros</h4>
               </Link>
+              <Link
+                href="/touchpoint"
+                className="menu-main-link"
+                onClick={handleLinkClick}
+              >
+                <h4>Contacto</h4>
+              </Link>
             </div>
           </div>
           <div className="menu-overlay-col menu-overlay-col-lg">
             <div className="menu-overlay-sub-col">
               <div className="menu-items-header">
-                <p>Explorar</p>
+                <p>Top del top</p>
               </div>
-              <div className="menu-sub-links">
-                <Link href="/lookbook" onClick={handleLinkClick}>
-                  Lookbook
-                </Link>
-                <Link href="/touchpoint" onClick={handleLinkClick}>
-                  Contacto
-                </Link>
-                <Link href="/unit" onClick={handleLinkClick}>
-                  Playera destacada
-                </Link>
-              </div>
-            </div>
-            <div className="menu-overlay-sub-col">
-              <div className="menu-items-header">
-                <p>Top del drop</p>
-              </div>
-              <div className="menu-sub-links menu-product-links">
-                <Link href="/unit" onClick={handleLinkClick}>
-                  01. Ronin Chapter Tee
-                </Link>
-                <Link href="/unit" onClick={handleLinkClick}>
-                  02. Akira Neon Tee
-                </Link>
-                <Link href="/unit" onClick={handleLinkClick}>
-                  03. Kaiju Warning Tee
-                </Link>
-                <Link href="/unit" onClick={handleLinkClick}>
-                  04. Sakura Static Tee
-                </Link>
+              <div className="menu-sub-links menu-product-grid">
+                {featuredProducts.map((product, index) => (
+                  <Link
+                    key={product.id || product.name || index}
+                    href={product.href || `/tienda/${product.id}`}
+                    onClick={handleLinkClick}
+                    className="menu-product-card"
+                  >
+                    <div className="menu-product-card-image">
+                      <img src={product.image} alt={product.name || "Producto"} />
+                    </div>
+                    <div className="menu-product-card-copy">
+                      <span>{`0${index + 1}`}</span>
+                      <p>{product.name}</p>
+                      <strong>${product.price}</strong>
+                    </div>
+                  </Link>
+                ))}
               </div>
             </div>
           </div>

@@ -1,7 +1,7 @@
 const BrandIcon = ({ width = 706, height = 673 }) => {
   return (
     <img
-      src="/logos/head-mangastyle-w.png"
+      src="/logos/head-mangastyle-b.png"
       alt="MangaStyle"
       width={width}
       height={height}

@@ -15,39 +15,29 @@
 
 .genesis-hero .container {
   position: relative;
-  color: var(--base-100);
+  color: var(--base-700);
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
   padding: 10rem 2.125rem;
-}
-
-.genesis-hero .container .gen-hero-copy:nth-child(1) {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
 }
 
 .genesis-hero .container .gen-hero-copy p {
   color: var(--base-400);
 }
 
-.genesis-hero .container .gen-hero-copy:nth-child(3) {
+.genesis-hero .container .gen-hero-copy {
   display: flex;
   flex-direction: column;
   gap: 4rem;
 }
 
-.genesis-hero .container .gen-hero-copy:nth-child(3) h1 {
+.genesis-hero .container .gen-hero-copy h1 {
   width: 75%;
   text-align: center;
   margin: 0 auto;
-}
-
-.genesis-hero .container .gen-hero-copy:nth-child(3) .gen-hero-meta {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
+  color: var(--accent-red);
+  text-shadow: 0 0.125rem 0.75rem rgba(17, 17, 17, 0.35);
 }
 
 .genesis-about {

@@ -1,7 +1,10 @@
 {
   "/_not-found/page": "app/_not-found/page.js",
   "/api/printful/products/route": "app/api/printful/products/route.js",
+  "/genesis/page": "app/genesis/page.js",
+  "/lookbook/page": "app/lookbook/page.js",
   "/page": "app/page.js",
-  "/tienda/[id]/page": "app/tienda/[id]/page.js",
+  "/touchpoint/page": "app/touchpoint/page.js",
+  "/unit/page": "app/unit/page.js",
   "/wardrobe/page": "app/wardrobe/page.js"
 }

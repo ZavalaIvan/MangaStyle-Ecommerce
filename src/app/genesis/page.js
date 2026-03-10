@@ -120,40 +120,13 @@ export default function Genesis() {
 
       <section className="genesis-hero">
         <div className="gen-hero-img">
-          <img src="/genesis/hero.jpg" alt="" />
+          <img src="/genesis/mangastyle-anime-bg.png" alt="" />
         </div>
         <div className="container">
-          <div className="gen-hero-copy">
-            <Copy animateOnScroll={false} delay={0.7} type="flicker">
-              <p>Anime en clave streetwear,</p>
-              <p>graficas con actitud,</p>
-              <p>drops hechos para fans.</p>
-            </Copy>
-          </div>
-          <div className="gen-hero-copy">
-            <Copy animateOnScroll={false} delay={0.8} type="flicker">
-              <p>Curamos playeras con energia otaku,</p>
-              <p>pensadas para hoy.</p>
-            </Copy>
-          </div>
           <div className="gen-hero-copy">
             <Copy animateOnScroll={false} delay={0.7}>
               <h1>La historia detras de MangaStyle</h1>
             </Copy>
-            <div className="gen-hero-meta">
-              <div className="gen-hero-meta-block">
-                <Copy animateOnScroll={false} delay={0.9} type="flicker">
-                  <p>Mezclamos moda urbana,</p>
-                  <p>referencias anime y manga,</p>
-                  <p>y graficas con caracter.</p>
-                </Copy>
-              </div>
-              <div className="gen-hero-meta-block">
-                <Copy animateOnScroll={false} delay={1} type="flicker">
-                  <p>[ DROP/MANGASTYLE/0001 ]</p>
-                </Copy>
-              </div>
-            </div>
           </div>
         </div>
       </section>

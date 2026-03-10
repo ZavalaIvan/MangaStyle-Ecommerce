@@ -4,7 +4,6 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 
-import { products } from "./wardrobe/products";
 import Preloader, { isInitialLoad } from "../components/Preloader/Preloader";
 import DotMatrix from "../components/DotMatrix/DotMatrix";
 import MarqueeBanner from "../components/MarqueeBanner/MarqueeBanner";
@@ -14,6 +13,7 @@ import CTA from "../components/CTA/CTA";
 
 import Copy from "../components/Copy/Copy";
 import Product from "../components/Product/Product";
+import { mapProductForCard } from "../lib/productCard";
 
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -33,8 +33,24 @@ export default function Index() {
   };
 
   useEffect(() => {
-    const shuffled = [...products].sort(() => 0.5 - Math.random());
-    setFeaturedProducts(shuffled.slice(0, 4));
+    async function loadFeaturedProducts() {
+      try {
+        const response = await fetch("/api/printful/products", {
+          cache: "no-store",
+        });
+        const data = await response.json();
+
+        if (!response.ok || !data?.ok) {
+          throw new Error(data?.error || "No se pudieron cargar los productos");
+        }
+
+        setFeaturedProducts((data.products || []).map(mapProductForCard).slice(0, 4));
+      } catch {
+        setFeaturedProducts([]);
+      }
+    }
+
+    loadFeaturedProducts();
   }, []);
 
   useGSAP(() => {
@@ -155,9 +171,9 @@ export default function Index() {
           <div className="featured-products-list">
             {featuredProducts.map((product) => (
               <Product
-                key={product.name}
+                key={product.id || product.name}
                 product={product}
-                productIndex={products.indexOf(product) + 1}
+                productIndex={featuredProducts.indexOf(product) + 1}
                 showAddToCart={true}
               />
             ))}
