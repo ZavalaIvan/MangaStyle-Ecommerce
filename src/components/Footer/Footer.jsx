@@ -20,7 +20,6 @@ const Footer = () => {
                 <Link href="/wardrobe">Catalogo</Link>
                 <Link href="/genesis">Nosotros</Link>
                 <Link href="/touchpoint">Contacto</Link>
-                <Link href="/lookbook">Lookbook</Link>
               </div>
             </div>
             <div className="footer-col">
@@ -28,20 +27,9 @@ const Footer = () => {
                 <p className="bodyCopy">Comunidad</p>
               </div>
               <div className="footer-col-links">
-                <a
-                  href="https://www.instagram.com/codegridweb/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Instagram
-                </a>
-                <a
-                  href="https://www.youtube.com/@codegrid"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  YouTube
-                </a>
+                <span>Instagram</span>
+                <span>Facebook</span>
+                <span>TikTok</span>
               </div>
             </div>
             <div className="footer-col">
@@ -49,9 +37,8 @@ const Footer = () => {
                 <p className="bodyCopy">Info</p>
               </div>
               <div className="footer-col-links">
-                <p>Playeras anime con enfoque streetwear</p>
-                <p>Drops limitados y restocks selectos</p>
-                <p>Envios nacionales e internacionales</p>
+                <Link href="/politicas-envio-devolucion">Politicas de envio</Link>
+                <Link href="/politicas-envio-devolucion">Politicas de devolucion</Link>
               </div>
             </div>
           </div>

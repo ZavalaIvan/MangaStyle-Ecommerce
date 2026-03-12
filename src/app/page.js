@@ -21,9 +21,45 @@ import { useGSAP } from "@gsap/react";
 
 gsap.registerPlugin(ScrollTrigger);
 
+const faqItems = [
+  {
+    question: "Cual es su politica de devoluciones y envios?",
+    answer:
+      "En MangaStyle cada prenda se produce bajo demanda despues de tu compra. El tiempo de produccion suele ser de 2 a 5 dias habiles y despues se envia segun tu pais o region. No aceptamos cambios o devoluciones por talla o cambio de opinion, pero si tu producto llega con defectos, errores de impresion o danos durante el envio, podemos revisar tu caso dentro de los 7 dias posteriores a la entrega.",
+    link: "/politicas-envio-devolucion",
+    linkLabel: "Ver politicas completas",
+  },
+  {
+    question: "Cuanto tarda en llegar mi pedido?",
+    answer:
+      "El tiempo total depende de la produccion y del destino. En general, primero se fabrica tu prenda en 2 a 5 dias habiles y despues se envia. Mexico suele tardar de 5 a 10 dias habiles, Estados Unidos de 3 a 7 dias habiles e internacional de 7 a 15 dias habiles.",
+  },
+  {
+    question: "Hacen envios internacionales?",
+    answer:
+      "Si. Trabajamos con socios logisticos para enviar pedidos a distintas regiones. El tiempo de entrega puede variar segun el pais, la temporada y los procesos aduanales.",
+  },
+  {
+    question: "Puedo cambiar la talla despues de comprar?",
+    answer:
+      "Como cada prenda se produce especialmente para tu pedido, no manejamos cambios por error de talla o por cambio de opinion. Te recomendamos revisar con cuidado la informacion del producto antes de finalizar la compra.",
+  },
+  {
+    question: "Que hago si mi pedido llega con un problema?",
+    answer:
+      "Si recibes un producto defectuoso, con error de impresion, diferente al solicitado o danado durante el envio, escribenos dentro de los 7 dias posteriores a la recepcion con tu numero de pedido, fotos claras y una breve descripcion del problema.",
+  },
+  {
+    question: "Que pasa si escribo mal mi direccion?",
+    answer:
+      "Es importante capturar una direccion completa y correcta. Si el transportista no puede entregar el pedido y este regresa al centro logistico, podremos ayudarte a reenviarlo, aunque en algunos casos puede generarse un nuevo costo de envio.",
+  },
+];
+
 export default function Index() {
   const [loaderAnimating, setLoaderAnimating] = useState(isInitialLoad);
   const [featuredProducts, setFeaturedProducts] = useState([]);
+  const [openFaqIndex, setOpenFaqIndex] = useState(0);
   const heroImgRef = useRef(null);
   const heroHeaderRef = useRef(null);
   const heroSectionRef = useRef(null);
@@ -188,6 +224,54 @@ export default function Index() {
       <PeelReveal />
 
       <CTA />
+
+      <section className="faq-preview">
+        <div className="container">
+          <div className="faq-preview-header">
+            <Copy type="flicker">
+              <p>FAQ</p>
+            </Copy>
+            <Copy>
+              <h3>Resolvemos tus dudas antes de tu pedido</h3>
+            </Copy>
+          </div>
+
+          <div className="faq-accordion">
+            {faqItems.map((item, index) => {
+              const isOpen = openFaqIndex === index;
+
+              return (
+                <div
+                  className={`faq-item ${isOpen ? "active" : ""}`}
+                  key={item.question}
+                >
+                  <button
+                    type="button"
+                    className="faq-trigger"
+                    onClick={() =>
+                      setOpenFaqIndex(isOpen ? -1 : index)
+                    }
+                  >
+                    <span className="faq-question">{item.question}</span>
+                    <span className="faq-icon">{isOpen ? "-" : "+"}</span>
+                  </button>
+
+                  {isOpen ? (
+                    <div className="faq-answer">
+                      <p className="bodyCopy">{item.answer}</p>
+                      {item.link ? (
+                        <Link className="faq-link" href={item.link}>
+                          {item.linkLabel}
+                        </Link>
+                      ) : null}
+                    </div>
+                  ) : null}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
     </>
   );
 }

@@ -75,7 +75,7 @@ export default function Touchpoint() {
                   <p className="bodyCopy">Atencion general</p>
                 </Copy>
                 <Copy animateOnScroll={false} delay={1}>
-                  <h4>hello@mangastyle.store</h4>
+                  <h4>hola@mangastyle.shop</h4>
                 </Copy>
               </div>
               <div className="contact-meta-block">
