@@ -114,10 +114,14 @@
   text-transform: uppercase;
   border: none;
   border-radius: .5rem;
+  justify-content: center;
+  align-items: center;
   margin-top: .5rem;
   padding: .75rem;
   font-weight: 500;
+  text-decoration: none;
   transition: transform .2s, background-color .2s;
+  display: flex;
 }
 
 .product .product-info .add-to-cart-btn:hover {

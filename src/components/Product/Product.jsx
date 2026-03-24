@@ -49,6 +49,8 @@ const Product = ({
   product,
   productIndex,
   showAddToCart = true,
+  ctaMode = "cart",
+  ctaLabel,
   className = "",
   innerRef,
   style,
@@ -109,11 +111,16 @@ const Product = ({
           {product?.colorCount ? <span>{product.colorCount} colores</span> : null}
           {product?.sizeRangeLabel ? <span>Tallas {product.sizeRangeLabel}</span> : null}
         </div>
-        {showAddToCart && (
-          <button className="add-to-cart-btn" onClick={handleAddToCart}>
-            Agregar al carrito
-          </button>
-        )}
+        {showAddToCart &&
+          (ctaMode === "link" ? (
+            <Link href={href} className="add-to-cart-btn">
+              {ctaLabel || "Ir al producto"}
+            </Link>
+          ) : (
+            <button className="add-to-cart-btn" onClick={handleAddToCart}>
+              {ctaLabel || "Agregar al carrito"}
+            </button>
+          ))}
       </div>
     </div>
   );

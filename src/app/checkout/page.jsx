@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import "./checkout.css";
+import { getAllowedRedirectPaymentMethods } from "../../lib/dlocalPaymentMethods";
 import { useCartStore, useCartSubtotal } from "../../store/cartStore";
 
 function getInitialState() {
@@ -20,6 +21,8 @@ function getInitialState() {
     countryCode: "MX",
     country: "MX",
     currency: "MXN",
+    provider: "dlocal",
+    paymentMethodId: "",
   };
 }
 
@@ -30,6 +33,13 @@ export default function CheckoutPage() {
   const [form, setForm] = useState(getInitialState);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const paymentMethods = useMemo(
+    () => getAllowedRedirectPaymentMethods(form.country),
+    [form.country]
+  );
+  const isDlocal = form.provider === "dlocal";
+  const isStripe = form.provider === "stripe";
+  const isMercadoPago = form.provider === "mercadopago";
 
   const canSubmit = useMemo(() => {
     return cartItems.length > 0 && !isSubmitting;
@@ -47,7 +57,14 @@ export default function CheckoutPage() {
       setIsSubmitting(true);
       setError("");
 
-      const response = await fetch("/api/checkout/dlocal", {
+      const endpoint =
+        form.provider === "stripe"
+          ? "/api/checkout/stripe"
+          : form.provider === "mercadopago"
+            ? "/api/checkout/mercadopago"
+            : "/api/checkout/dlocal";
+
+      const response = await fetch(endpoint, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -69,8 +86,10 @@ export default function CheckoutPage() {
             countryCode: form.countryCode,
           },
           payment: {
+            provider: form.provider,
             country: form.country,
             currency: form.currency,
+            paymentMethodId: form.paymentMethodId,
             deviceId: globalThis.crypto?.randomUUID?.() || undefined,
           },
         }),
@@ -98,11 +117,29 @@ export default function CheckoutPage() {
     <main className="checkout-page">
       <div className="checkout-layout">
         <section className="checkout-form-panel">
-          <p className="checkout-kicker">Checkout dLocal Go</p>
+          <p className="checkout-kicker">
+            {isDlocal
+              ? "Checkout dLocal Go"
+              : isStripe
+                ? "Checkout Stripe"
+                : "Checkout Mercado Pago"}
+          </p>
           <h1>Completa tus datos para pagar y enviar a produccion</h1>
 
           <form className="checkout-form" onSubmit={handleSubmit}>
             <div className="checkout-grid">
+              <label className="is-full">
+                <span>Proveedor de pago</span>
+                <select
+                  name="provider"
+                  value={form.provider}
+                  onChange={updateField}
+                >
+                  <option value="dlocal">dLocal</option>
+                  <option value="stripe">Stripe</option>
+                  <option value="mercadopago">Mercado Pago</option>
+                </select>
+              </label>
               <label>
                 <span>Nombre completo</span>
                 <input
@@ -132,6 +169,7 @@ export default function CheckoutPage() {
                   name="document"
                   value={form.document}
                   onChange={updateField}
+                  required={isDlocal && form.country === "MX"}
                 />
               </label>
               <label className="is-full">
@@ -205,12 +243,47 @@ export default function CheckoutPage() {
                   required
                 />
               </label>
+              {isDlocal ? (
+                <label className="is-full">
+                  <span>Metodo de pago</span>
+                  <select
+                    name="paymentMethodId"
+                    value={form.paymentMethodId}
+                    onChange={updateField}
+                  >
+                    <option value="">Mostrar todos en dLocal Checkout</option>
+                    {paymentMethods.map((method) => (
+                      <option key={method.id} value={method.id}>
+                        {method.label}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              ) : isStripe ? (
+                <label className="is-full">
+                  <span>Metodo de pago</span>
+                  <input value="Tarjeta en Stripe Checkout" readOnly />
+                </label>
+              ) : (
+                <label className="is-full">
+                  <span>Metodo de pago</span>
+                  <input value="Mercado Pago Checkout Pro" readOnly />
+                </label>
+              )}
             </div>
 
             {error ? <p className="checkout-error">{error}</p> : null}
 
             <button type="submit" className="checkout-submit" disabled={!canSubmit}>
-              {isSubmitting ? "Creando checkout..." : "Pagar con dLocal Go"}
+              {isSubmitting
+                ? "Creando checkout..."
+                : isDlocal
+                  ? "Pagar con dLocal Go"
+                  : isStripe
+                    ? "Pagar con Stripe"
+                    : isMercadoPago
+                      ? "Pagar con Mercado Pago"
+                      : "Pagar"}
             </button>
           </form>
         </section>

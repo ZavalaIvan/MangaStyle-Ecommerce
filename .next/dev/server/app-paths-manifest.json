@@ -1,8 +1,7 @@
 {
+  "/api/checkout/dlocal/route": "app/api/checkout/dlocal/route.js",
   "/api/printful/products/route": "app/api/printful/products/route.js",
-  "/genesis/page": "app/genesis/page.js",
+  "/checkout/page": "app/checkout/page.js",
   "/page": "app/page.js",
-  "/politicas-envio-devolucion/page": "app/politicas-envio-devolucion/page.js",
-  "/touchpoint/page": "app/touchpoint/page.js",
-  "/wardrobe/page": "app/wardrobe/page.js"
+  "/tienda/[id]/page": "app/tienda/[id]/page.js"
 }

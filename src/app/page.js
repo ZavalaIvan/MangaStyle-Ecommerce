@@ -211,6 +211,8 @@ export default function Index() {
                 product={product}
                 productIndex={featuredProducts.indexOf(product) + 1}
                 showAddToCart={true}
+                ctaMode="link"
+                ctaLabel="Ir al producto"
               />
             ))}
           </div>

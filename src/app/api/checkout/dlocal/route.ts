@@ -1,72 +1,43 @@
-import crypto from "node:crypto";
-
 import { NextResponse } from "next/server";
 
+import { getBaseUrl, getRequestIp, prepareCheckoutOrder } from "../../../../lib/checkout";
 import { dlocalFetch } from "../../../../lib/dlocal";
-import { createPrintfulDraftOrder } from "../../../../lib/printful";
+import {
+  getAllowedRedirectPaymentMethods,
+  parseDlocalPaymentMethodEnv,
+} from "../../../../lib/dlocalPaymentMethods";
 
-type CheckoutItem = {
-  name?: string;
-  price?: string;
-  quantity?: number;
-  syncVariantId?: number | null;
-};
-
-function required(value: string | undefined, label: string) {
-  if (!value?.trim()) {
-    throw new Error(`Falta ${label}`);
-  }
-
-  return value.trim();
-}
-
-function getBaseUrl() {
-  return process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
-}
 
 function getNotificationUrl() {
   return process.env.DLOCAL_GO_NOTIFICATION_URL || `${getBaseUrl()}/api/webhooks/dlocal`;
 }
 
-function getCallbackUrl() {
-  return process.env.DLOCAL_GO_CALLBACK_URL || `${getBaseUrl()}/api/checkout/dlocal/callback`;
+function getSuccessUrl(externalId: string) {
+  return (
+    process.env.DLOCAL_GO_SUCCESS_URL ||
+    process.env.DLOCAL_GO_CALLBACK_URL ||
+    `${getBaseUrl()}/checkout/resultado?provider=dlocal&status=success&verified=false&orderId=${encodeURIComponent(externalId)}`
+  );
+}
+
+function getBackUrl(externalId: string) {
+  return (
+    process.env.DLOCAL_GO_BACK_URL ||
+    `${getBaseUrl()}/checkout/resultado?provider=dlocal&status=cancelled&verified=false&orderId=${encodeURIComponent(externalId)}`
+  );
 }
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const cartItems = (body?.cartItems || []) as CheckoutItem[];
-
-    if (!cartItems.length) {
-      return NextResponse.json(
-        { ok: false, error: "El carrito esta vacio" },
-        { status: 400 }
-      );
-    }
-
-    const invalidItem = cartItems.find((item) => !item.syncVariantId);
-
-    if (invalidItem) {
-      return NextResponse.json(
-        {
-          ok: false,
-          error: "Uno de los productos no tiene sync_variant_id para crear la orden",
-        },
-        { status: 400 }
-      );
-    }
-
-    const email = required(body?.customer?.email, "email");
-    const fullName = required(body?.customer?.fullName, "nombre completo");
-    const address1 = required(body?.shipping?.address1, "direccion");
-    const city = required(body?.shipping?.city, "ciudad");
-    const stateCode = required(body?.shipping?.stateCode, "estado");
-    const zip = required(body?.shipping?.zip, "codigo postal");
-    const countryCode = required(body?.shipping?.countryCode, "pais");
-
-    const subtotal = cartItems.reduce((total, item) => {
-      return total + Number.parseFloat(item.price || "0") * (item.quantity || 1);
-    }, 0);
+    const checkoutOrder = await prepareCheckoutOrder(body);
+    const {
+      cartItems,
+      subtotal,
+      externalId,
+      customer: { email, fullName, phone, document },
+      shipping: { address1, address2, city, stateCode, zip, countryCode },
+    } = checkoutOrder;
 
     const currency =
       body?.payment?.currency ||
@@ -76,27 +47,31 @@ export async function POST(request: Request) {
       body?.payment?.country ||
       process.env.DLOCAL_GO_COUNTRY ||
       countryCode;
+    const selectedPaymentMethodId = String(body?.payment?.paymentMethodId || "")
+      .trim()
+      .toUpperCase();
+    const configuredPaymentMethodIds = parseDlocalPaymentMethodEnv(
+      process.env.DLOCAL_GO_PAYMENT_METHOD_ID
+    );
+    const redirectPaymentMethods = getAllowedRedirectPaymentMethods(country);
+    const availablePaymentMethodIds =
+      configuredPaymentMethodIds.length > 0
+        ? redirectPaymentMethods
+            .filter((method) => configuredPaymentMethodIds.includes(method.id))
+            .map((method) => method.id)
+        : redirectPaymentMethods.map((method) => method.id);
 
-    const externalId = `ms-${Date.now()}-${crypto.randomUUID().slice(0, 8)}`;
+    if (country === "MX" && !document) {
+      throw new Error("Falta documento del pagador (CURP o RFC) para pagos en MX");
+    }
 
-    await createPrintfulDraftOrder({
-      external_id: externalId,
-      recipient: {
-        name: fullName,
-        email,
-        phone: body?.customer?.phone || undefined,
-        address1,
-        address2: body?.shipping?.address2 || undefined,
-        city,
-        state_code: stateCode,
-        country_code: countryCode,
-        zip,
-      },
-      items: cartItems.map((item) => ({
-        sync_variant_id: item.syncVariantId,
-        quantity: item.quantity || 1,
-      })),
-    });
+    if (
+      selectedPaymentMethodId &&
+      availablePaymentMethodIds.length > 0 &&
+      !availablePaymentMethodIds.includes(selectedPaymentMethodId)
+    ) {
+      throw new Error("El metodo de pago seleccionado no esta habilitado");
+    }
 
     const paymentPayload: Record<string, unknown> = {
       amount: Number(subtotal.toFixed(2)),
@@ -105,28 +80,41 @@ export async function POST(request: Request) {
       payment_method_flow: "REDIRECT",
       order_id: externalId,
       description: `MangaStyle order ${externalId}`,
-      callback_url: getCallbackUrl(),
+      success_url: getSuccessUrl(externalId),
+      back_url: getBackUrl(externalId),
       notification_url: getNotificationUrl(),
       payer: {
         name: fullName,
         email,
-        document: body?.customer?.document || undefined,
+        document: document || undefined,
+        address: {
+          country: countryCode,
+          state: stateCode,
+          city,
+          zip_code: zip,
+          street: address1,
+        },
+        ip: getRequestIp(request) || undefined,
+        user_reference: email,
       },
     };
 
-    if (process.env.DLOCAL_GO_PAYMENT_METHOD_ID) {
-      paymentPayload.payment_method_id = process.env.DLOCAL_GO_PAYMENT_METHOD_ID;
+    if (selectedPaymentMethodId) {
+      paymentPayload.payment_method_id = selectedPaymentMethodId;
     }
 
-    if (body?.customer?.phone) {
+    if (phone) {
       paymentPayload.payer = {
         ...(paymentPayload.payer as Record<string, unknown>),
-        phone: body.customer.phone,
+        phone,
       };
     }
 
     if (body?.payment?.deviceId) {
-      paymentPayload.device_id = body.payment.deviceId;
+      paymentPayload.payer = {
+        ...(paymentPayload.payer as Record<string, unknown>),
+        device_id: body.payment.deviceId,
+      };
     }
 
     const dlocalResponse = await dlocalFetch<{

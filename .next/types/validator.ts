@@ -59,6 +59,24 @@ type RouteHandlerConfig<Route extends AppRouteHandlerRoutes = AppRouteHandlerRou
   type __Unused = __Check
 }
 
+// Validate ../../src/app/api/checkout/mercadopago/route.ts
+{
+  type __IsExpected<Specific extends RouteHandlerConfig<"/api/checkout/mercadopago">> = Specific
+  const handler = {} as typeof import("../../src/app/api/checkout/mercadopago/route.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../src/app/api/checkout/stripe/route.ts
+{
+  type __IsExpected<Specific extends RouteHandlerConfig<"/api/checkout/stripe">> = Specific
+  const handler = {} as typeof import("../../src/app/api/checkout/stripe/route.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
 // Validate ../../src/app/api/printful/products/[id]/route.ts
 {
   type __IsExpected<Specific extends RouteHandlerConfig<"/api/printful/products/[id]">> = Specific
@@ -81,6 +99,24 @@ type RouteHandlerConfig<Route extends AppRouteHandlerRoutes = AppRouteHandlerRou
 {
   type __IsExpected<Specific extends RouteHandlerConfig<"/api/webhooks/dlocal">> = Specific
   const handler = {} as typeof import("../../src/app/api/webhooks/dlocal/route.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../src/app/api/webhooks/mercadopago/route.ts
+{
+  type __IsExpected<Specific extends RouteHandlerConfig<"/api/webhooks/mercadopago">> = Specific
+  const handler = {} as typeof import("../../src/app/api/webhooks/mercadopago/route.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../src/app/api/webhooks/stripe/route.ts
+{
+  type __IsExpected<Specific extends RouteHandlerConfig<"/api/webhooks/stripe">> = Specific
+  const handler = {} as typeof import("../../src/app/api/webhooks/stripe/route.js")
   type __Check = __IsExpected<typeof handler>
   // @ts-ignore
   type __Unused = __Check

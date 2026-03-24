@@ -69,6 +69,18 @@
       "namedRegex": "^/api/checkout/dlocal/callback(?:/)?$"
     },
     {
+      "page": "/api/checkout/mercadopago",
+      "regex": "^/api/checkout/mercadopago(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/checkout/mercadopago(?:/)?$"
+    },
+    {
+      "page": "/api/checkout/stripe",
+      "regex": "^/api/checkout/stripe(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/checkout/stripe(?:/)?$"
+    },
+    {
       "page": "/api/printful/products",
       "regex": "^/api/printful/products(?:/)?$",
       "routeKeys": {},
@@ -79,6 +91,18 @@
       "regex": "^/api/webhooks/dlocal(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/api/webhooks/dlocal(?:/)?$"
+    },
+    {
+      "page": "/api/webhooks/mercadopago",
+      "regex": "^/api/webhooks/mercadopago(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/webhooks/mercadopago(?:/)?$"
+    },
+    {
+      "page": "/api/webhooks/stripe",
+      "regex": "^/api/webhooks/stripe(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/webhooks/stripe(?:/)?$"
     },
     {
       "page": "/checkout",
@@ -109,6 +133,12 @@
       "regex": "^/lookbook(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/lookbook(?:/)?$"
+    },
+    {
+      "page": "/politicas-envio-devolucion",
+      "regex": "^/politicas\\-envio\\-devolucion(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/politicas\\-envio\\-devolucion(?:/)?$"
     },
     {
       "page": "/touchpoint",

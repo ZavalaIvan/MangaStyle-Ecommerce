@@ -177,6 +177,31 @@
         "x-next-revalidate-tag-token"
       ]
     },
+    "/politicas-envio-devolucion": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "next-action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/politicas-envio-devolucion",
+      "dataRoute": "/politicas-envio-devolucion.rsc",
+      "prefetchDataRoute": null,
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
     "/touchpoint": {
       "experimentalBypassFor": [
         {
@@ -256,8 +281,8 @@
   "dynamicRoutes": {},
   "notFoundRoutes": [],
   "preview": {
-    "previewModeId": "9844d54bb213e1da9b1792c093db23fc",
-    "previewModeSigningKey": "77687fd2707b38dae2cc89e1e4f9efbac0204c07204a5b8ad21c34756af10f32",
-    "previewModeEncryptionKey": "e4bccbf4b06482cdecbeabadfb6e097f55ab8edecf9ef66a81ad0a32f7e36d19"
+    "previewModeId": "f81f1c8fe1f8dcfc4912162781a6cc3b",
+    "previewModeSigningKey": "c1e587280b6fbb9a2b96bbbc228dfbb39937012b32b48560cfdc36ee530070ad",
+    "previewModeEncryptionKey": "97b54226b201fe7453ea4bdcaa8072efecbb2bdebb2f3f49101042e49a30cd6e"
   }
 }

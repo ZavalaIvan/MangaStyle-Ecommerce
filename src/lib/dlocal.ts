@@ -1,32 +1,41 @@
 import crypto from "node:crypto";
 
+const DLOCAL_GO_ENVIRONMENT = String(
+  process.env.DLOCAL_GO_ENVIRONMENT || process.env.DLOCAL_GO_ENV || "sandbox"
+).toLowerCase();
 const DLOCAL_GO_API_URL =
-  process.env.DLOCAL_GO_API_URL || "https://sandbox.dlocal.com";
-const DLOCAL_GO_X_LOGIN = process.env.DLOCAL_GO_X_LOGIN;
-const DLOCAL_GO_X_TRANS_KEY = process.env.DLOCAL_GO_X_TRANS_KEY;
+  process.env.DLOCAL_GO_API_URL ||
+  (DLOCAL_GO_ENVIRONMENT === "production"
+    ? "https://api.dlocalgo.com"
+    : "https://api-sbx.dlocalgo.com");
+const DLOCAL_GO_API_KEY =
+  process.env.DLOCAL_GO_API_KEY || process.env.DLOCAL_GO_X_LOGIN;
 const DLOCAL_GO_SECRET_KEY = process.env.DLOCAL_GO_SECRET_KEY;
 
-const DLOCAL_API_VERSION = "2.1";
 const DLOCAL_USER_AGENT = "MangaStyle / 1.0";
 
 function getDlocalRequiredEnv() {
-  if (!DLOCAL_GO_X_LOGIN || !DLOCAL_GO_X_TRANS_KEY || !DLOCAL_GO_SECRET_KEY) {
+  if (!DLOCAL_GO_API_KEY || !DLOCAL_GO_SECRET_KEY) {
     throw new Error(
-      "Faltan DLOCAL_GO_X_LOGIN, DLOCAL_GO_X_TRANS_KEY o DLOCAL_GO_SECRET_KEY"
+      "Faltan DLOCAL_GO_API_KEY y/o DLOCAL_GO_SECRET_KEY para dLocal Go"
     );
   }
 
   return {
-    login: DLOCAL_GO_X_LOGIN,
-    transKey: DLOCAL_GO_X_TRANS_KEY,
+    apiKey: DLOCAL_GO_API_KEY,
     secretKey: DLOCAL_GO_SECRET_KEY,
   };
 }
 
-function signPayload(login: string, date: string, payload: string) {
+function buildAuthorizationHeader() {
+  const { apiKey, secretKey } = getDlocalRequiredEnv();
+  return `Bearer ${apiKey}:${secretKey}`;
+}
+
+function signNotificationPayload(apiKey: string, payload: string) {
   return crypto
     .createHmac("sha256", getDlocalRequiredEnv().secretKey)
-    .update(`${login}${date}${payload}`)
+    .update(`${apiKey}${payload}`)
     .digest("hex");
 }
 
@@ -39,35 +48,54 @@ function extractSignature(headerValue: string | null) {
   return match?.[1]?.toLowerCase() || headerValue.toLowerCase();
 }
 
+async function parseDlocalResponse(response: Response) {
+  const rawText = await response.text();
+  const contentType = response.headers.get("content-type") || "";
+  const looksJson =
+    contentType.includes("application/json") ||
+    rawText.trim().startsWith("{") ||
+    rawText.trim().startsWith("[");
+
+  if (!looksJson) {
+    const preview = rawText.replace(/\s+/g, " ").trim().slice(0, 160);
+    throw new Error(
+      `dLocal Go devolvio una respuesta no JSON (${response.status}). ${preview || "Sin contenido"}`
+    );
+  }
+
+  try {
+    return rawText ? JSON.parse(rawText) : {};
+  } catch {
+    const preview = rawText.replace(/\s+/g, " ").trim().slice(0, 160);
+    throw new Error(
+      `dLocal Go devolvio JSON invalido (${response.status}). ${preview || "Sin contenido"}`
+    );
+  }
+}
+
 export async function dlocalFetch<T = any>(
   endpoint: string,
   payload: Record<string, unknown>
 ): Promise<T> {
-  const { login, transKey } = getDlocalRequiredEnv();
-  const date = new Date().toISOString();
   const body = JSON.stringify(payload);
-  const signature = signPayload(login, date, body);
 
-  const response = await fetch(`${DLOCAL_GO_API_URL}${endpoint}`, {
+  const response = await fetch(`${DLOCAL_GO_API_URL}/v1${endpoint}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "X-Date": date,
-      "X-Login": login,
-      "X-Trans-Key": transKey,
-      "X-Version": DLOCAL_API_VERSION,
       "User-Agent": DLOCAL_USER_AGENT,
-      Authorization: `V2-HMAC-SHA256, Signature: ${signature}`,
+      Authorization: buildAuthorizationHeader(),
     },
     body,
     cache: "no-store",
   });
 
-  const data = await response.json();
+  const data = await parseDlocalResponse(response);
 
   if (!response.ok) {
     throw new Error(
       data?.message ||
+        data?.detail ||
         data?.status_detail ||
         data?.error ||
         `Error dLocal: ${response.status}`
@@ -78,29 +106,22 @@ export async function dlocalFetch<T = any>(
 }
 
 export async function dlocalGetPaymentStatus(paymentId: string) {
-  const { login, transKey } = getDlocalRequiredEnv();
-  const date = new Date().toISOString();
-  const signature = signPayload(login, date, "");
-
-  const response = await fetch(`${DLOCAL_GO_API_URL}/payments/${paymentId}/status`, {
+  const response = await fetch(`${DLOCAL_GO_API_URL}/v1/payments/${paymentId}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      "X-Date": date,
-      "X-Login": login,
-      "X-Trans-Key": transKey,
-      "X-Version": DLOCAL_API_VERSION,
       "User-Agent": DLOCAL_USER_AGENT,
-      Authorization: `V2-HMAC-SHA256, Signature: ${signature}`,
+      Authorization: buildAuthorizationHeader(),
     },
     cache: "no-store",
   });
 
-  const data = await response.json();
+  const data = await parseDlocalResponse(response);
 
   if (!response.ok) {
     throw new Error(
       data?.message ||
+        data?.detail ||
         data?.status_detail ||
         data?.error ||
         `Error dLocal: ${response.status}`
@@ -111,17 +132,16 @@ export async function dlocalGetPaymentStatus(paymentId: string) {
 }
 
 export function validateDlocalNotificationSignature(headers: Headers, body: string) {
-  const login = DLOCAL_GO_X_LOGIN || "";
-  const date = headers.get("x-date") || headers.get("X-Date") || "";
+  const apiKey = DLOCAL_GO_API_KEY || "";
   const providedSignature = extractSignature(
     headers.get("authorization") || headers.get("Authorization")
   );
 
-  if (!login || !date || !providedSignature) {
+  if (!apiKey || !providedSignature) {
     return false;
   }
 
-  const expected = signPayload(login, date, body);
+  const expected = signNotificationPayload(apiKey, body);
   return expected === providedSignature;
 }
 
@@ -131,14 +151,17 @@ export function validateDlocalCallbackSignature(params: {
   status: string;
   signature: string;
 }) {
-  const login = DLOCAL_GO_X_LOGIN || "";
+  const apiKey = DLOCAL_GO_API_KEY || "";
 
-  if (!login || !params.date || !params.paymentId || !params.signature) {
+  if (!apiKey || !params.paymentId || !params.signature) {
     return false;
   }
 
-  const payload = `{status:${params.status},paymentId:${params.paymentId}}`;
-  const expected = signPayload(login, params.date, payload);
+  const payload = JSON.stringify({
+    payment_id: params.paymentId,
+    status: params.status,
+  });
+  const expected = signNotificationPayload(apiKey, payload);
 
   return expected === params.signature.toLowerCase();
 }
