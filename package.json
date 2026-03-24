@@ -21,6 +21,8 @@
     "zustand": "^5.0.9"
   },
   "devDependencies": {
-    "@types/react": "19.2.14"
+    "@types/node": "^24.5.2",
+    "@types/react": "19.2.14",
+    "typescript": "^5.9.2"
   }
 }

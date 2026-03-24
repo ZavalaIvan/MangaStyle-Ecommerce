@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 
-import "./product-detail-client.css";
+import styles from "./product-detail-client.module.css";
 import type { PrintfulProduct, PrintfulVariant } from "../../../lib/printful";
 import { useCartStore } from "../../../store/cartStore";
 
@@ -121,40 +121,42 @@ export default function ProductDetailClient({
   }
 
   return (
-    <main className="product-detail-page">
-      <section className="product-detail-shell">
-        <div className="product-detail-media">
+    <main className={styles["product-detail-page"]}>
+      <section className={styles["product-detail-shell"]}>
+        <div className={styles["product-detail-media"]}>
           {displayedImage ? (
             <img
               src={displayedImage}
               alt={product?.name || "Producto"}
-              className="product-detail-image"
+              className={styles["product-detail-image"]}
             />
           ) : (
-            <div className="product-detail-image product-detail-image-empty" />
+            <div
+              className={`${styles["product-detail-image"]} ${styles["product-detail-image-empty"]}`}
+            />
           )}
         </div>
 
-        <div className="product-detail-copy">
-          <p className="product-detail-kicker">MangaStyle x Printful</p>
+        <div className={styles["product-detail-copy"]}>
+          <p className={styles["product-detail-kicker"]}>MangaStyle x Printful</p>
           <h1>{product?.name || "Producto sin nombre"}</h1>
 
-          <div className="product-detail-price">
+          <div className={styles["product-detail-price"]}>
             {displayedPrice
               ? `${displayedPrice} ${displayedCurrency}`
               : "Precio no disponible"}
           </div>
 
-          <div className="product-detail-section">
-            <p className="product-detail-label">Color</p>
-            <div className="product-detail-options">
+          <div className={styles["product-detail-section"]}>
+            <p className={styles["product-detail-label"]}>Color</p>
+            <div className={styles["product-detail-options"]}>
               {colors.map((color) => (
                 <button
                   key={color}
                   type="button"
                   onClick={() => handleColorChange(color)}
-                  className={`product-detail-chip ${
-                    selectedColor === color ? "is-active" : ""
+                  className={`${styles["product-detail-chip"]} ${
+                    selectedColor === color ? styles["is-active"] : ""
                   }`}
                 >
                   {color}
@@ -163,16 +165,16 @@ export default function ProductDetailClient({
             </div>
           </div>
 
-          <div className="product-detail-section">
-            <p className="product-detail-label">Talla</p>
-            <div className="product-detail-options">
+          <div className={styles["product-detail-section"]}>
+            <p className={styles["product-detail-label"]}>Talla</p>
+            <div className={styles["product-detail-options"]}>
               {availableSizes.map((size) => (
                 <button
                   key={size}
                   type="button"
                   onClick={() => setSelectedSize(size)}
-                  className={`product-detail-size ${
-                    selectedSize === size ? "is-active" : ""
+                  className={`${styles["product-detail-size"]} ${
+                    selectedSize === size ? styles["is-active"] : ""
                   }`}
                 >
                   {size}
@@ -181,7 +183,7 @@ export default function ProductDetailClient({
             </div>
           </div>
 
-          <div className="product-detail-meta">
+          <div className={styles["product-detail-meta"]}>
             <p>
               <strong>Variante seleccionada:</strong>{" "}
               {selectedVariant?.name || "No disponible"}
@@ -197,10 +199,10 @@ export default function ProductDetailClient({
             </p>
           </div>
 
-          <div className="product-detail-actions">
+          <div className={styles["product-detail-actions"]}>
             <button
               type="button"
-              className="product-detail-button"
+              className={styles["product-detail-button"]}
               disabled={!selectedVariant}
               onClick={handleAddToCart}
             >
